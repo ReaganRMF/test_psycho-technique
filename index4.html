@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur d'Aptitude - Français, Logique & Maths (Niveau 3)</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --hover-color: #e2e6ea;
+            --correct-color: #28a745;
+            --wrong-color: #dc3545;
+            --info-bg: #d1ecf1;
+            --info-text: #0c5460;
+            --info-border: #17a2b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--hover-color);
+            border-color: #adb5bd;
+        }
+
+        .option-btn.selected {
+            background-color: #cce5ff;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct-ans {
+            background-color: var(--correct-color) !important;
+            color: white !important;
+            border-color: var(--correct-color) !important;
+        }
+
+        .option-btn.wrong-ans {
+            background-color: var(--wrong-color) !important;
+            color: white !important;
+            border-color: var(--wrong-color) !important;
+        }
+
+        .explanation-box {
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--info-border);
+            font-weight: 500;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #004494;
+        }
+
+        .btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px auto;
+        }
+
+        @media (min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="start-screen">
+        <h1 style="text-align: center; color: #0056b3;">Module 3 : Français, Logique & Maths</h1>
+        <p>Ce test de <strong>50 questions</strong> simule les épreuves d'aptitude verbale et écrite (Grammaire, Conjugaison, Compréhension) souvent éliminatoires dans les concours, combinées à des tests de logique et calcul mental.</p>
+        <p>Prenez le temps de lire les explications après chaque validation pour comprendre les pièges orthographiques et grammaticaux.</p>
+        <p>Temps alloué : <strong>50 minutes</strong>.</p>
+        <button class="btn" onclick="startTest()">Démarrer le test</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="header">
+            <span id="question-counter">Question 1 / 50</span>
+            <span class="timer" id="timer">50:00</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="question-text" id="question-text">Chargement de la question...</div>
+        
+        <div class="options-grid" id="options-grid"></div>
+
+        <div id="explanation-box" class="explanation-box hidden"></div>
+
+        <button class="btn" id="action-btn" onclick="handleAction()" disabled>Valider la réponse</button>
+    </div>
+
+    <div id="result-screen" class="result-screen hidden">
+        <h2>Test Terminé</h2>
+        <p>Voici votre score global pour cette session multidisciplinaire :</p>
+        <div class="score-circle" id="final-score">0%</div>
+        <p id="feedback-msg"></p>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Recommencer le test</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // GRAMMAIRE ET ORTHOGRAPHE
+        { q: "Complétez : 'Ils se sont ... les mains avant l'intervention.'", options: ["lavé", "lavés", "lavées", "laver"], answer: 0, explanation: "Avec un verbe pronominal, si le Complément d'Objet Direct (ici 'les mains') est placé APRÈS le verbe, le participe passé ne s'accorde pas." },
+        { q: "Choisissez la bonne orthographe : 'Je vous ... le rapport de maintenance en pièce jointe.'", options: ["envoi", "envoie", "envois", "envoy"], answer: 1, explanation: "Il s'agit du verbe 'envoyer' conjugué à la première personne du singulier au présent de l'indicatif : J'envoie. ('Un envoi' est le nom)." },
+        { q: "Complétez : 'C'est la machine dont je t'... parlé hier.'", options: ["ai", "est", "a", "es"], answer: 0, explanation: "C'est le verbe parler conjugué au passé composé avec l'auxiliaire avoir : J'ai parlé (à toi). D'où 'je t'ai parlé'." },
+        { q: "Trouvez la phrase correctement écrite :", options: ["Il a pallié à ce problème.", "Il a pallier ce problème.", "Il a pallié ce problème.", "Il as pallié ce problème."], answer: 2, explanation: "Le verbe 'pallier' est transitif direct. On ne dit jamais 'pallier à quelque chose', mais 'pallier quelque chose'." },
+        { q: "Complétez : 'Les directeurs se sont ... à la tête de l'entreprise.'", options: ["succédé", "succédés", "succédées", "succédée"], answer: 0, explanation: "Le verbe se succéder ne prend jamais de COD (on succède 'à' quelqu'un). Le participe passé est donc toujours invariable : succédé." },
+        { q: "Quel mot est mal orthographié ?", options: ["Hormis", "Parmi", "Malgré", "Parmis"], answer: 3, explanation: "Le mot 'Parmi' ne prend JAMAIS de 's' à la fin." },
+        { q: "Complétez : 'Ces câbles électriques sont ...'", options: ["bleu clair", "bleus clairs", "bleus clair", "bleu clairs"], answer: 0, explanation: "Les adjectifs de couleur composés (bleu clair, vert foncé) sont toujours invariables. Ils ne prennent ni 's' ni 'e'." },
+        { q: "Complétez : 'Je suis prêt ... commencer les travaux.'", options: ["a", "à", "as", "ah"], answer: 1, explanation: "Il s'agit de la préposition 'à'. On ne peut pas dire 'Je suis prêt avait commencer'." },
+        { q: "Complétez : '... efforts n'ont pas suffi pour rétablir le courant.'", options: ["Ces", "Ses", "C'est", "S'est"], answer: 1, explanation: "C'est un adjectif possessif (les efforts à lui). On écrit donc 'Ses'." },
+        { q: "Parmi ces phrases, laquelle contient un pléonasme (répétition inutile) à éviter dans un rapport ?", options: ["Il est descendu rapidement.", "Nous allons collaborer ensemble.", "Le câble est très long.", "Il a résumé brièvement."], answer: 1, explanation: "Collaborer signifie déjà 'travailler ensemble'. Dire 'collaborer ensemble' est donc une répétition inutile (pléonasme)." },
+
+        // CONJUGAISON
+        { q: "Complétez : 'Si l'alarme avait sonné, nous ne ... pas entrés.'", options: ["serions", "serons", "sommes", "étions"], answer: 0, explanation: "C'est une condition dans le passé (Si + Plus-que-parfait). La proposition principale se conjugue donc au conditionnel passé (serions)." },
+        { q: "Complétez : 'Il est essentiel que vous ... les consignes de sécurité.'", options: ["suivez", "suiviez", "suivrez", "suivrons"], answer: 1, explanation: "L'expression 'Il est essentiel que' exige l'emploi du subjonctif présent : 'que vous suiviez'." },
+        { q: "Conjuguez le verbe : 'Je résous, tu résous, il ...'", options: ["résou", "résous", "résoud", "résout"], answer: 3, explanation: "Le verbe résoudre au présent de l'indicatif fait : Je résous, tu résous, il résout (avec un 't' à la fin)." },
+        { q: "Complétez : 'Dès qu'il ... terminé l'inspection, il partira.'", options: ["aura", "a", "aurait", "avait"], answer: 0, explanation: "L'action 'terminer' est future, mais elle doit se passer avant 'il partira'. On utilise donc le futur antérieur : 'aura terminé'." },
+        { q: "Complétez : 'Pendant que je ... le réseau, une panne est survenue.'", options: ["configure", "configurait", "configurais", "configurerai"], answer: 2, explanation: "L'action est continue dans le passé. Il faut utiliser l'imparfait à la 1ère personne du singulier (Je configurais)." },
+        { q: "Complétez : 'Veuillez ... l'expression de mes salutations distinguées.'", options: ["agréez", "agréer", "agréé", "agréée"], answer: 1, explanation: "Après un verbe conjugué (Veuillez), le verbe suivant se met à l'infinitif (agréer)." },
+        { q: "Conjugaison : 'Les pièces que nous avons ... étaient défectueuses.'", options: ["commandé", "commandés", "commandées", "commander"], answer: 2, explanation: "Le COD 'que' (qui remplace 'les pièces', féminin pluriel) est placé avant le verbe. Le participe passé s'accorde donc : commandées." },
+        { q: "Complétez : 'Nous ... souvent nos outils dans cet atelier.'", options: ["laissions", "laisserons", "laissons", "laissont"], answer: 0, explanation: "Le mot 'souvent' dans un récit au passé appelle l'imparfait, indiquant une habitude : nous laissions." },
+        { q: "Complétez : 'Bien qu'il ... qualifié, il n'a pas été retenu.'", options: ["est", "soit", "serait", "était"], answer: 1, explanation: "La locution conjonctive 'Bien que' exige toujours le mode subjonctif : 'Bien qu'il soit'." },
+        { q: "Complétez : 'Ils ... le matériel hier matin.'", options: ["ont reçu", "ont reçus", "on reçu", "ont reçues"], answer: 0, explanation: "Avec l'auxiliaire avoir, s'il n'y a pas de COD avant, le participe passé reste invariable : 'ont reçu'." },
+
+        // VOCABULAIRE ET COMPRÉHENSION VERBALE
+        { q: "Quel est le synonyme de 'Obsolète' ?", options: ["Moderne", "Dépassé", "Efficace", "Neuf"], answer: 1, explanation: "Quelque chose d'obsolète est périmé, qui n'est plus en usage, donc dépassé." },
+        { q: "Quel est l'antonyme (le contraire) de 'Éphémère' ?", options: ["Durable", "Court", "Rapide", "Volatile"], answer: 0, explanation: "Éphémère signifie qui dure très peu de temps. Son contraire est donc durable." },
+        { q: "Que signifie le verbe 'Ajourner' une réunion ?", options: ["L'annuler définitivement", "La reporter à plus tard", "La valider", "La commencer immédiatement"], answer: 1, explanation: "Ajourner signifie remettre à un autre jour, reporter." },
+        { q: "On dit d'une personne qu'elle est 'Éloquente' lorsqu'elle :", options: ["Est très timide", "Écoute attentivement", "Parle avec facilité et persuasion", "Travaille avec ses mains"], answer: 2, explanation: "L'éloquence est l'art de bien parler, de s'exprimer avec aisance pour convaincre." },
+        { q: "Complétez l'analogie : 'Le doigt est à la main ce que la page est ...'", options: ["Au livre", "Au stylo", "Au mot", "À la lecture"], answer: 0, explanation: "Un doigt est une partie d'une main, tout comme une page est une partie d'un livre (relation contenant/contenu)." },
+        { q: "Trouvez l'intrus parmi ces termes d'attitude professionnelle :", options: ["Minutie", "Rigueur", "Négligence", "Précision"], answer: 2, explanation: "Minutie, rigueur et précision sont des qualités professionnelles. La négligence est un défaut (manque de soin)." },
+        { q: "Que signifie le verbe 'Altérer' ?", options: ["Améliorer", "Modifier en mal, dégrader", "Changer de place", "Nettoyer"], answer: 1, explanation: "Altérer signifie causer un dommage, changer en mal (ex: L'humidité a altéré le circuit)." },
+        { q: "Quel est le synonyme de 'Exhaustif' ?", options: ["Fatigant", "Incomplet", "Rapide", "Complet, qui traite un sujet à fond"], answer: 3, explanation: "Un rapport exhaustif est un rapport qui couvre l'intégralité d'un sujet sans rien omettre." },
+        { q: "Complétez l'analogie : 'Électricité est à Câble ce que Eau est à ...'", options: ["Rivière", "Pompe", "Tuyau", "Vanne"], answer: 2, explanation: "Le câble est le conduit qui transporte l'électricité, tout comme le tuyau est le conduit qui transporte l'eau." },
+        { q: "Que signifie 'Intrinsèque' ?", options: ["Qui vient de l'extérieur", "Qui est inhérent, propre à la chose elle-même", "Qui est temporaire", "Qui n'a pas de valeur"], answer: 1, explanation: "Une qualité intrinsèque est une qualité qui appartient en propre à un objet ou à une personne, indépendamment des éléments extérieurs." },
+
+        // LOGIQUE ET RAISONNEMENT
+        { q: "Trouvez la lettre qui complète la suite : A, C, E, G, ... ?", options: ["H", "I", "J", "K"], answer: 1, explanation: "On saute une lettre à chaque fois dans l'alphabet. Après G, on saute H, et on arrive à I." },
+        { q: "Si tous les ingénieurs sont précis, et que Marc est précis, alors :", options: ["Marc est ingénieur", "Marc n'est pas ingénieur", "On ne peut pas conclure que Marc est ingénieur", "Tous les gens précis sont ingénieurs"], answer: 2, explanation: "C'est un piège de syllogisme. Tous les ingénieurs sont précis, mais l'inverse n'est pas vrai. Marc peut être un comptable précis. On ne peut donc rien conclure sur sa profession." },
+        { q: "Dans une boîte aveugle, il y a 5 gants noirs et 5 gants blancs. Combien faut-il en tirer au minimum pour être certain d'avoir une paire de la même couleur ?", options: ["2", "3", "5", "6"], answer: 1, explanation: "Si vous tirez 2 gants, vous pouvez avoir 1 noir et 1 blanc. Le 3ème gant tiré sera forcément soit noir, soit blanc, et formera donc une paire avec l'un des deux premiers." },
+        { q: "Quel jour étions-nous hier si demain est Lundi ?", options: ["Vendredi", "Samedi", "Dimanche", "Mardi"], answer: 1, explanation: "Si demain est Lundi, alors aujourd'hui nous sommes Dimanche. Donc hier, nous étions Samedi." },
+        { q: "Complétez la suite : 1, 3, 6, 10, 15, ... ?", options: ["18", "20", "21", "25"], answer: 2, explanation: "L'écart entre les nombres augmente de 1 à chaque étape (+2, +3, +4, +5). Le prochain écart est +6 (15 + 6 = 21)." },
+        { q: "Si 3 machines fabriquent 3 pièces en 3 minutes, combien de temps faut-il à 100 machines pour fabriquer 100 pièces ?", options: ["3 minutes", "10 minutes", "33 minutes", "100 minutes"], answer: 0, explanation: "Une seule machine fabrique une pièce en 3 minutes. Donc si 100 machines fonctionnent en même temps, elles produiront 100 pièces dans ces mêmes 3 minutes." },
+        { q: "Trouvez la lettre manquante : Z, X, V, T, ... ?", options: ["S", "R", "Q", "P"], answer: 1, explanation: "Il s'agit de l'alphabet à l'envers, en sautant une lettre à chaque fois (Z -> Y -> X -> W -> V...). Avant T, on saute S et on arrive à R." },
+        { q: "Luc est plus âgé que Paul. Paul est plus jeune que Marc. Qui est le plus âgé ?", options: ["Luc", "Paul", "Marc", "Impossible à déterminer"], answer: 3, explanation: "On sait que Luc et Marc sont tous les deux plus âgés que Paul, mais aucune information ne permet de comparer l'âge de Luc et de Marc entre eux." },
+        { q: "Un nénuphar double de taille chaque jour. Il lui faut 20 jours pour couvrir totalement un étang. En combien de jours couvrira-t-il la moitié de l'étang ?", options: ["10 jours", "15 jours", "19 jours", "On ne sait pas"], answer: 2, explanation: "S'il double chaque jour, il occupait la moitié de l'étang juste le jour avant de le remplir totalement. Donc au 19ème jour." },
+        { q: "Le mot 'PULSE' est l'anagramme (les mêmes lettres dans le désordre) de :", options: ["PLUIE", "LOUPE", "PEULS", "SOUPE"], answer: 2, explanation: "P-E-U-L-S contient exactement les mêmes lettres que P-U-L-S-E." },
+
+        // MATHÉMATIQUES ET CALCUL MENTAL
+        { q: "Combien font 25% de 200 ?", options: ["25", "50", "75", "100"], answer: 1, explanation: "25% équivaut à diviser par 4. Donc 200 / 4 = 50." },
+        { q: "Calculez : 1/3 + 1/6", options: ["2/9", "1/2", "2/6", "3/6"], answer: 1, explanation: "Il faut mettre au même dénominateur (6). 1/3 devient 2/6. L'addition donne 2/6 + 1/6 = 3/6. En simplifiant par 3, on obtient 1/2." },
+        { q: "Le prix d'un outil passe de 50$ à 40$. Quel est le pourcentage de réduction ?", options: ["10%", "15%", "20%", "25%"], answer: 2, explanation: "La réduction est de 10$. La formule est (Réduction / Prix initial) x 100. Soit (10/50) x 100 = 20%." },
+        { q: "Quel est le résultat de : 8 + 8 / 2 ?", options: ["8", "12", "16", "24"], answer: 1, explanation: "Selon les règles de priorité mathématique, la division se fait avant l'addition. On fait donc d'abord 8/2 = 4. Puis 8 + 4 = 12." },
+        { q: "Quel est le périmètre d'un local technique rectangulaire mesurant 10m de long sur 5m de large ?", options: ["15m", "30m", "50m", "100m"], answer: 1, explanation: "Le périmètre est la somme de tous les côtés : (Longueur + Largeur) x 2. Soit (10 + 5) x 2 = 30m." },
+        { q: "Calculez : 0.1 x 0.1", options: ["0.1", "0.01", "1", "0.2"], answer: 1, explanation: "Multipliez 1 par 1 pour obtenir 1, puis comptez le nombre total de chiffres après la virgule (ici deux chiffres). Le résultat est donc 0.01." },
+        { q: "Un train part de Kinshasa à 14h15. Le trajet dure 2h50. À quelle heure arrivera-t-il ?", options: ["16h50", "17h05", "17h15", "16h05"], answer: 1, explanation: "14h15 + 2h = 16h15. Ensuite, on ajoute 50 minutes. 16h15 + 45 min = 17h00. Il reste 5 min, donc 17h05." },
+        { q: "Quel est le produit de 7 par 8 ?", options: ["15", "54", "56", "64"], answer: 2, explanation: "Le produit est le résultat d'une multiplication. 7 x 8 = 56." },
+        { q: "Que représentent les 3/4 de 60 ?", options: ["15", "30", "40", "45"], answer: 3, explanation: "Pour trouver un quart (1/4), on divise 60 par 4 = 15. Pour trois quarts, on multiplie par 3. 15 x 3 = 45." },
+        { q: "Si vous roulez à une vitesse constante de 120 km/h, quelle distance parcourez-vous en 15 minutes ?", options: ["15 km", "20 km", "30 km", "45 km"], answer: 2, explanation: "15 minutes représentent exactement 1/4 d'heure. Vous parcourez donc 1/4 de la distance horaire : 120 / 4 = 30 km." }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timeLeft = 3000; 
+    let timerInterval;
+    let selectedOptionIndex = null;
+    let isValidated = false; 
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function startTest() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        shuffleArray(questions);
+        loadQuestion();
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                endTest();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').innerText = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if(timeLeft < 300) { 
+            document.getElementById('timer').style.color = 'var(--wrong-color)';
+        }
+    }
+
+    function loadQuestion() {
+        selectedOptionIndex = null;
+        isValidated = false;
+        document.getElementById('action-btn').disabled = true;
+        document.getElementById('action-btn').innerText = "Valider la réponse";
+        document.getElementById('explanation-box').classList.add('hidden'); 
+        
+        const q = questions[currentQuestionIndex];
+        document.getElementById('question-counter').innerText = `Question ${currentQuestionIndex + 1} / ${questions.length}`;
+        document.getElementById('question-text').innerText = q.q;
+        
+        const progress = ((currentQuestionIndex) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        const optionsGrid = document.getElementById('options-grid');
+        optionsGrid.innerHTML = ''; 
+
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function selectOption(index, btnElement) {
+        if (isValidated) return; 
+
+        selectedOptionIndex = index;
+        
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        
+        btnElement.classList.add('selected');
+        document.getElementById('action-btn').disabled = false;
+    }
+
+    function handleAction() {
+        if (!isValidated) {
+            const q = questions[currentQuestionIndex];
+            const correctIndex = q.answer;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true; 
+                if (index === correctIndex) {
+                    btn.classList.add('correct-ans'); 
+                } else if (index === selectedOptionIndex) {
+                    btn.classList.add('wrong-ans'); 
+                }
+            });
+
+            if (selectedOptionIndex === correctIndex) {
+                score++;
+            }
+
+            const explanationBox = document.getElementById('explanation-box');
+            explanationBox.innerText = `Explication : ${q.explanation}`;
+            explanationBox.classList.remove('hidden');
+
+            document.getElementById('action-btn').innerText = "Question suivante";
+            isValidated = true;
+            
+        } else {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                endTest();
+            }
+        }
+    }
+
+    function endTest() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        const percentage = Math.round((score / questions.length) * 100);
+        const scoreCircle = document.getElementById('final-score');
+        scoreCircle.innerText = `${percentage}%`;
+
+        let feedback = "";
+        if (percentage >= 80) {
+            feedback = "Excellent score ! Votre communication écrite est irréprochable et votre logique est très bien affûtée.";
+            scoreCircle.style.borderColor = "var(--correct-color)";
+            scoreCircle.style.color = "var(--correct-color)";
+        } else if (percentage >= 50) {
+            feedback = "Bon résultat. Soyez attentif aux pièges d'accords et aux priorités mathématiques pour viser le haut du classement.";
+            scoreCircle.style.borderColor = "#ffc107";
+            scoreCircle.style.color = "#ffc107";
+        } else {
+            feedback = "Il y a des révisions à faire en français. La maîtrise de la langue est très valorisée lors de ces épreuves. Prenez le temps de relire les règles !";
+            scoreCircle.style.borderColor = "var(--wrong-color)";
+            scoreCircle.style.color = "var(--wrong-color)";
+        }
+
+        document.getElementById('feedback-msg').innerText = `Vous avez obtenu ${score} bonnes réponses sur ${questions.length}. ${feedback}`;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Test Psychotechnique - SNEL & Kadea</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --hover-color: #e2e6ea;
+            --correct-color: #28a745;
+            --wrong-color: #dc3545;
+            --info-bg: #d1ecf1;
+            --info-text: #0c5460;
+            --info-border: #17a2b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--hover-color);
+            border-color: #adb5bd;
+        }
+
+        .option-btn.selected {
+            background-color: #cce5ff;
+            border-color: var(--primary-color);
+        }
+
+        /* Classes pour la validation */
+        .option-btn.correct-ans {
+            background-color: var(--correct-color) !important;
+            color: white !important;
+            border-color: var(--correct-color) !important;
+        }
+
+        .option-btn.wrong-ans {
+            background-color: var(--wrong-color) !important;
+            color: white !important;
+            border-color: var(--wrong-color) !important;
+        }
+
+        .explanation-box {
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--info-border);
+            font-weight: 500;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #004494;
+        }
+
+        .btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .result-screen {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px auto;
+        }
+
+        @media (min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="start-screen">
+        <h1 style="text-align: center; color: #0056b3;">Simulateur d'Aptitude - Entraînement Technique</h1>
+        <p>Ce test contient <strong>50 questions</strong> psychotechniques couvrant la logique numérique, mécanique, et verbale.</p>
+        <p><strong>Nouveauté :</strong> Après chaque validation, une correction détaillée s'affichera pour vous aider à comprendre vos erreurs avant le grand jour.</p>
+        <p>Vous avez <strong>50 minutes</strong>. Bonne révision !</p>
+        <button class="btn" onclick="startTest()">Démarrer l'évaluation</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="header">
+            <span id="question-counter">Question 1 / 50</span>
+            <span class="timer" id="timer">50:00</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="question-text" id="question-text">Chargement de la question...</div>
+        
+        <div class="options-grid" id="options-grid">
+            </div>
+
+        <div id="explanation-box" class="explanation-box hidden"></div>
+
+        <button class="btn" id="action-btn" onclick="handleAction()" disabled>Valider la réponse</button>
+    </div>
+
+    <div id="result-screen" class="result-screen hidden">
+        <h2>Test Terminé</h2>
+        <p>Voici votre performance globale :</p>
+        <div class="score-circle" id="final-score">0%</div>
+        <p id="feedback-msg"></p>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Recommencer le test</button>
+    </div>
+</div>
+
+<script>
+    // Base de données des 50 questions avec explications
+    const questions = [
+        // Logique Numérique (Suites)
+        { q: "Quel nombre complète la suite : 2, 4, 8, 16, ... ?", options: ["24", "32", "30", "64"], answer: 1, explanation: "On multiplie le nombre précédent par 2 à chaque étape (16 x 2 = 32)." },
+        { q: "Quel nombre complète la suite : 3, 9, 27, 81, ... ?", options: ["162", "243", "100", "324"], answer: 1, explanation: "On multiplie par 3 à chaque étape (81 x 3 = 243)." },
+        { q: "Complétez : 1, 1, 2, 3, 5, 8, ... ?", options: ["11", "12", "13", "14"], answer: 2, explanation: "C'est la suite de Fibonacci : chaque nombre est la somme des deux précédents (5 + 8 = 13)." },
+        { q: "Trouvez l'intrus : 16, 25, 36, 48, 64.", options: ["25", "36", "48", "64"], answer: 2, explanation: "Tous les nombres sont des carrés parfaits (4², 5², 6², 8²) sauf 48." },
+        { q: "Quel nombre suit : 100, 90, 81, 73, ... ?", options: ["64", "65", "66", "67"], answer: 2, explanation: "On soustrait d'abord 10, puis 9, puis 8. La prochaine soustraction est 7 (73 - 7 = 66)." },
+        { q: "Complétez la suite : 5, 10, 20, 40, ... ?", options: ["60", "80", "100", "120"], answer: 1, explanation: "Chaque nombre est le double du précédent (40 x 2 = 80)." },
+        { q: "Suite : 12, 11, 13, 12, 14, 13, ... ?", options: ["12", "14", "15", "16"], answer: 2, explanation: "Le schéma est alterné : -1, puis +2. Après 13, on fait +2 = 15." },
+        { q: "Trouvez le nombre manquant : 2, 6, 12, 20, ... ?", options: ["28", "30", "32", "36"], answer: 1, explanation: "On ajoute 4, puis 6, puis 8, puis 10 (20 + 10 = 30)." },
+        { q: "Suite : 50, 45, 41, 38, ... ?", options: ["36", "35", "34", "33"], answer: 0, explanation: "On soustrait 5, puis 4, puis 3. L'étape suivante est -2 (38 - 2 = 36)." },
+        { q: "Complétez : 1, 4, 9, 16, 25, ... ?", options: ["30", "36", "40", "49"], answer: 1, explanation: "Ce sont les carrés des nombres entiers : 1², 2², 3², 4², 5². La suite est 6² = 36." },
+        
+        // Mathématiques rapides et Proportionnalité
+        { q: "Si 3 techniciens installent 15 compteurs en 1 heure, combien de compteurs installent 6 techniciens en 2 heures ?", options: ["30", "45", "60", "90"], answer: 2, explanation: "Le nombre de techniciens double (x2) et le temps double (x2). La production est donc multipliée par 4 : 15 x 4 = 60." },
+        { q: "Un câble de 100m est coupé de sorte qu'une partie fait 20m de plus que l'autre. Quelle est la longueur de la grande partie ?", options: ["40m", "50m", "60m", "80m"], answer: 2, explanation: "Posons l'équation : x + (x + 20) = 100. Donc 2x = 80, x = 40 (petit morceau). Le grand fait 40 + 20 = 60m." },
+        { q: "Un article coûte 200$, il est soldé à 20%. Quel est son nouveau prix ?", options: ["160$", "180$", "150$", "140$"], answer: 0, explanation: "20% de 200$ = 40$. Le nouveau prix est 200 - 40 = 160$." },
+        { q: "Quelle est la moitié du quart de 160 ?", options: ["10", "20", "40", "80"], answer: 1, explanation: "Le quart de 160 est 40. La moitié de 40 est 20." },
+        { q: "Une machine produit 50 pièces en 5 minutes. Combien en produit-elle en 1 heure ?", options: ["300", "500", "600", "1000"], answer: 2, explanation: "Elle produit 10 pièces par minute (50/5). En 1 heure (60 minutes), elle produira 60 x 10 = 600 pièces." },
+        { q: "Si 5x + 10 = 35, que vaut x ?", options: ["4", "5", "6", "7"], answer: 1, explanation: "On soustrait 10 des deux côtés : 5x = 25. On divise par 5 : x = 5." },
+        { q: "Un train roule à 120 km/h. Quelle distance parcourt-il en 45 minutes ?", options: ["80 km", "90 km", "100 km", "120 km"], answer: 1, explanation: "120 km en 60 minutes = 2 km par minute. En 45 minutes : 45 x 2 = 90 km." },
+        { q: "Convertir 3/4 en pourcentage :", options: ["60%", "70%", "75%", "80%"], answer: 2, explanation: "La fraction 3/4 est égale à 0.75, soit 75%." },
+        { q: "Le périmètre d'un carré est de 40 cm. Quelle est son aire ?", options: ["80 cm²", "100 cm²", "160 cm²", "400 cm²"], answer: 1, explanation: "Un côté mesure 40 / 4 = 10 cm. L'aire est 10 x 10 = 100 cm²." },
+        { q: "Si deux pompes remplissent un bassin en 6 heures, combien de temps mettront trois pompes identiques ?", options: ["3h", "4h", "5h", "9h"], answer: 1, explanation: "Plus il y a de pompes, moins il faut de temps (inversement proportionnel). 2 pompes * 6h = 12h de travail total. Avec 3 pompes : 12 / 3 = 4 heures." },
+
+        // Logique Mécanique et Physique de base
+        { q: "Deux roues crantées A et B sont en contact. A a 10 dents, B a 30 dents. Si A fait 3 tours, combien de tours fait B ?", options: ["1 tour", "3 tours", "9 tours", "0.5 tour"], answer: 0, explanation: "La roue B est 3 fois plus grande (30/10), elle tournera donc 3 fois moins vite. 3 tours / 3 = 1 tour." },
+        { q: "Si la roue A tourne dans le sens horaire, dans quel sens tourne la roue B qui lui est collée ?", options: ["Horaire", "Anti-horaire", "Aléatoire", "Elle ne tourne pas"], answer: 1, explanation: "Deux roues en prise directe tournent toujours en sens opposé." },
+        { q: "Pour soulever une lourde charge avec un levier, le point d'appui doit être :", options: ["Près de la charge", "Loin de la charge", "Au milieu exact", "Peu importe"], answer: 0, explanation: "Règle du levier : plus le point d'appui est proche de la charge, moins l'effort demandé est important." },
+        { q: "Quel matériau est le meilleur isolant thermique ?", options: ["Cuivre", "Aluminium", "Verre", "Acier"], answer: 2, explanation: "Le verre est un isolant, tandis que le cuivre, l'aluminium et l'acier sont d'excellents conducteurs thermiques." },
+        { q: "Dans un système de poulies, si l'on utilise une poulie mobile, l'effort à fournir est :", options: ["Doublé", "Divisé par deux", "Inchangé", "Quadruplé"], answer: 1, explanation: "Une poulie mobile répartit le poids sur deux brins de corde, réduisant ainsi l'effort de moitié." },
+        { q: "Si un réservoir fuit de 2 litres par heure et qu'on y ajoute 5 litres par heure, en combien d'heures un réservoir vide de 30L sera-t-il plein ?", options: ["5h", "6h", "10h", "15h"], answer: 2, explanation: "Gain net = 5L (entrants) - 2L (sortants) = 3L gagnés par heure. Pour remplir 30L : 30 / 3 = 10 heures." },
+        { q: "Quel outil est utilisé pour mesurer une tension électrique ?", options: ["Ampèremètre", "Ohmmètre", "Voltmètre", "Wattmètre"], answer: 2, explanation: "La tension (en Volts) se mesure avec un Voltmètre." },
+        { q: "Un engrenage de 40 dents entraîne un engrenage de 20 dents. Ce système est un :", options: ["Multiplicateur de vitesse", "Réducteur de vitesse", "Inverser de vitesse", "Stabilisateur"], answer: 0, explanation: "La petite roue de sortie tournera deux fois plus vite que la grande roue motrice. C'est un multiplicateur." },
+        { q: "Parmi ces métaux, lequel est le meilleur conducteur électrique à température ambiante ?", options: ["Or", "Argent", "Cuivre", "Aluminium"], answer: 1, explanation: "L'argent est le meilleur conducteur, suivi de près par le cuivre (plus utilisé car moins cher) et l'or." },
+        { q: "Pour serrer un écrou très résistant, il vaut mieux utiliser :", options: ["Une clé courte", "Une clé longue", "Une pince", "Un tournevis"], answer: 1, explanation: "Une clé longue augmente le bras de levier, ce qui décuple le couple de serrage sans forcer." },
+
+        // Analogies et Logique Verbale
+        { q: "Volt est à Tension ce que Ampère est à :", options: ["Résistance", "Puissance", "Courant", "Énergie"], answer: 2, explanation: "Le Volt est l'unité de la tension électrique, et l'Ampère est l'unité du courant (intensité)." },
+        { q: "Lumière est à Ampoule ce que Chaleur est à :", options: ["Radiateur", "Thermomètre", "Câble", "Moteur"], answer: 0, explanation: "L'ampoule produit de la lumière. Le radiateur produit de la chaleur." },
+        { q: "Trouvez l'intrus :", options: ["Marteau", "Tournevis", "Scie", "Clou"], answer: 3, explanation: "Le marteau, le tournevis et la scie sont des outils de travail. Le clou est le matériel sur lequel on agit." },
+        { q: "Mécanicien est à Garage ce que Technicien est à :", options: ["Bureau", "Atelier", "Hôpital", "École"], answer: 1, explanation: "Le mécanicien travaille dans un garage, le technicien (surtout en maintenance) travaille souvent dans un atelier ou sur le terrain." },
+        { q: "Chaud est à Froid ce que Résistance est à :", options: ["Conductance", "Impédance", "Inductance", "Capacitance"], answer: 0, explanation: "Chaud et froid sont des opposés. L'opposé (ou plutôt l'inverse) de la résistance électrique est la conductance (facilité à laisser passer le courant)." },
+        { q: "Complétez : Fil est à Bobine ce que Câble est à :", options: ["Touret", "Réseau", "Pylône", "Transformateur"], answer: 0, explanation: "Un fil fin s'enroule sur une bobine. Un gros câble électrique s'enroule sur un touret industriel." },
+        { q: "Lequel de ces mots ne correspond pas au champ lexical de l'énergie ?", options: ["Joule", "Watt", "Kilogramme", "Calorie"], answer: 2, explanation: "Le Joule et la Calorie mesurent l'énergie, le Watt la puissance. Le Kilogramme mesure la masse." },
+        { q: "Arbre est à Forêt ce que Composant est à :", options: ["Circuit", "Outil", "Machine", "Usine"], answer: 0, explanation: "Un ensemble d'arbres forme une forêt. Un ensemble de composants forme un circuit." },
+        { q: "Trouvez l'intrus :", options: ["Cuivre", "Zinc", "Plastique", "Plomb"], answer: 2, explanation: "Le plastique est un isolant, alors que le cuivre, le zinc et le plomb sont des métaux conducteurs." },
+        { q: "Début est à Fin ce que Interrupteur ouvert est à :", options: ["Interrupteur cassé", "Interrupteur fermé", "Bouton poussoir", "Prise"], answer: 1, explanation: "Oppositions directes. Le contraire d'un interrupteur ouvert est un interrupteur fermé." },
+
+        // Raisonnement Déductif et Logique Générale
+        { q: "Si tous les ingénieurs sont bons en maths, et que Paul est ingénieur, alors :", options: ["Paul aime les maths", "Paul est bon en maths", "Paul est technicien", "On ne peut rien conclure"], answer: 1, explanation: "C'est un syllogisme parfait. A = B, C appartient à A, donc C = B." },
+        { q: "Une boîte contient 3 boules rouges et 2 bleues. Quelle est la probabilité de tirer une bleue ?", options: ["20%", "40%", "50%", "60%"], answer: 1, explanation: "Il y a 5 boules au total. 2 bleues sur 5 = 2/5 = 40%." },
+        { q: "A est plus lourd que B. C est plus léger que B. Qui est le plus lourd ?", options: ["A", "B", "C", "Impossible à savoir"], answer: 0, explanation: "Ordre de poids : A > B > C. A est donc le plus lourd." },
+        { q: "Quel jour étions-nous la veille d'avant-hier si demain est dimanche ?", options: ["Mercredi", "Jeudi", "Vendredi", "Mardi"], answer: 0, explanation: "Si demain est dimanche, aujourd'hui est samedi. Avant-hier était jeudi. La veille d'avant-hier était mercredi." },
+        { q: "Dans un tiroir, il y a 10 chaussettes noires et 10 blanches. Combien faut-il en tirer à l'aveugle pour être sûr d'avoir une paire ?", options: ["2", "3", "10", "11"], answer: 1, explanation: "Si tu tires 2 chaussettes, elles peuvent être dépareillées (1 noire, 1 blanche). La 3ème complètera obligatoirement la noire ou la blanche." },
+        { q: "Si la proposition 'Aucun moteur n'est silencieux' est fausse, alors :", options: ["Tous les moteurs sont silencieux", "Au moins un moteur est silencieux", "Les moteurs sont bruyants", "Rien de tout cela"], answer: 1, explanation: "La négation de 'Aucun' est 'Au moins un'. Si c'est faux qu'il n'y en a aucun, c'est qu'il y en a au moins un." },
+        { q: "Pierre est plus grand que Jacques. Marc est plus petit que Pierre. Qui est le plus petit ?", options: ["Jacques", "Marc", "Pierre", "Impossible à déterminer"], answer: 3, explanation: "On sait que Pierre est le plus grand, mais l'énoncé ne donne aucun moyen de comparer la taille de Jacques et Marc." },
+        { q: "L'alphabet de Z à A : quelle est la 5ème lettre ?", options: ["V", "U", "T", "S"], answer: 0, explanation: "Z(1), Y(2), X(3), W(4), V(5)." },
+        { q: "Quel est le nombre minimum de coupes pour couper un gâteau en 8 parts égales ?", options: ["3", "4", "7", "8"], answer: 0, explanation: "Coupe 1 : 2 parts. Coupe 2 (croix) : 4 parts. Coupe 3 (horizontale au milieu de la hauteur) : 8 parts." },
+        { q: "Une bactérie double de volume chaque minute. Elle remplit un bocal en 1 heure. En combien de temps le bocal était-il à moitié plein ?", options: ["30 min", "45 min", "59 min", "On ne sait pas"], answer: 2, explanation: "Puisqu'elle double chaque minute, le bocal était à moitié plein juste une minute avant d'être plein (soit à la 59ème minute)." }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timeLeft = 3000; // 50 minutes en secondes
+    let timerInterval;
+    let selectedOptionIndex = null;
+    let isValidated = false; // Indique si la question actuelle a été validée
+
+    // Mélanger les questions pour l'entraînement
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function startTest() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        shuffleArray(questions);
+        loadQuestion();
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                endTest();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').innerText = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if(timeLeft < 300) { 
+            document.getElementById('timer').style.color = 'var(--wrong-color)';
+        }
+    }
+
+    function loadQuestion() {
+        selectedOptionIndex = null;
+        isValidated = false;
+        document.getElementById('action-btn').disabled = true;
+        document.getElementById('action-btn').innerText = "Valider la réponse";
+        document.getElementById('explanation-box').classList.add('hidden'); // Cacher l'explication
+        
+        const q = questions[currentQuestionIndex];
+        document.getElementById('question-counter').innerText = `Question ${currentQuestionIndex + 1} / ${questions.length}`;
+        document.getElementById('question-text').innerText = q.q;
+        
+        const progress = ((currentQuestionIndex) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+
+        const optionsGrid = document.getElementById('options-grid');
+        optionsGrid.innerHTML = ''; 
+
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function selectOption(index, btnElement) {
+        if (isValidated) return; // Ne plus rien faire si déjà validé
+
+        selectedOptionIndex = index;
+        
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        
+        btnElement.classList.add('selected');
+        document.getElementById('action-btn').disabled = false;
+    }
+
+    function handleAction() {
+        if (!isValidated) {
+            // Étape 1 : Validation
+            const q = questions[currentQuestionIndex];
+            const correctIndex = q.answer;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            // Verrouillage et Coloration
+            buttons.forEach((btn, index) => {
+                btn.disabled = true; // Désactive les boutons
+                if (index === correctIndex) {
+                    btn.classList.add('correct-ans'); // Vert
+                } else if (index === selectedOptionIndex) {
+                    btn.classList.add('wrong-ans'); // Rouge
+                }
+            });
+
+            // Calcul du score
+            if (selectedOptionIndex === correctIndex) {
+                score++;
+            }
+
+            // Affichage de l'explication
+            const explanationBox = document.getElementById('explanation-box');
+            explanationBox.innerText = `Explication : ${q.explanation}`;
+            explanationBox.classList.remove('hidden');
+
+            // Changement du bouton
+            document.getElementById('action-btn').innerText = "Question suivante";
+            isValidated = true;
+            
+        } else {
+            // Étape 2 : Passage à la question suivante
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                endTest();
+            }
+        }
+    }
+
+    function endTest() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        const percentage = Math.round((score / questions.length) * 100);
+        const scoreCircle = document.getElementById('final-score');
+        scoreCircle.innerText = `${percentage}%`;
+
+        let feedback = "";
+        if (percentage >= 80) {
+            feedback = "Excellent ! Votre logique est aiguisée. Vous êtes prêt pour ce type d'épreuve.";
+            scoreCircle.style.borderColor = "var(--correct-color)";
+            scoreCircle.style.color = "var(--correct-color)";
+        } else if (percentage >= 50) {
+            feedback = "Bon travail. Vous avez les bases, mais analysez bien les explications pour gagner en rapidité.";
+            scoreCircle.style.borderColor = "#ffc107";
+            scoreCircle.style.color = "#ffc107";
+        } else {
+            feedback = "Il y a encore du travail. Prenez le temps de revoir les bases avec les explications fournies pour chaque erreur.";
+            scoreCircle.style.borderColor = "var(--wrong-color)";
+            scoreCircle.style.color = "var(--wrong-color)";
+        }
+
+        document.getElementById('feedback-msg').innerText = `Vous avez obtenu ${score} bonnes réponses sur ${questions.length}. ${feedback}`;
+    }
+</script>
+
+</body>
+</html>
