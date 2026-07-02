@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Test Psychotechnique - SNEL & Kadea (Niveau 2)</title>
+    <title>Simulateur d'Aptitude - Français, Logique & Maths (Niveau 3)</title>
     <style>
         :root {
             --primary-color: #0056b3;
@@ -191,11 +191,11 @@
 
 <div class="container">
     <div id="start-screen">
-        <h1 style="text-align: center; color: #0056b3;">Simulateur d'Aptitude - Session d'Entraînement 2</h1>
-        <p>Ce module contient <strong>50 nouvelles questions inédites</strong> pour parfaire votre préparation logique, numérique et technique.</p>
-        <p>Le fonctionnement reste identique : validation immédiate en couleur avec une explication succincte pour corriger le tir.</p>
-        <p>Temps alloué : <strong>50 minutes</strong>. Bonne concentration !</p>
-        <button class="btn" onclick="startTest()">Démarrer la session</button>
+        <h1 style="text-align: center; color: #0056b3;">Module 3 : Français, Logique & Maths</h1>
+        <p>Ce test de <strong>50 questions</strong> simule les épreuves d'aptitude verbale et écrite (Grammaire, Conjugaison, Compréhension) souvent éliminatoires dans les concours, combinées à des tests de logique et calcul mental.</p>
+        <p>Prenez le temps de lire les explications après chaque validation pour comprendre les pièges orthographiques et grammaticaux.</p>
+        <p>Temps alloué : <strong>50 minutes</strong>.</p>
+        <button class="btn" onclick="startTest()">Démarrer le test</button>
     </div>
 
     <div id="quiz-screen" class="hidden">
@@ -217,75 +217,75 @@
     </div>
 
     <div id="result-screen" class="result-screen hidden">
-        <h2>Évaluation Terminée</h2>
-        <p>Voici votre score pour cette deuxième session :</p>
+        <h2>Test Terminé</h2>
+        <p>Voici votre score global pour cette session multidisciplinaire :</p>
         <div class="score-circle" id="final-score">0%</div>
         <p id="feedback-msg"></p>
-        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Recommencer la session</button>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Recommencer le test</button>
     </div>
 </div>
 
 <script>
     const questions = [
-        // Logique Numérique (Suites)
-        { q: "Quel nombre complète la suite suivante : 2, 3, 5, 7, 11, 13, ... ?", options: ["15", "16", "17", "19"], answer: 2, explanation: "Il s'agit de la suite logique des nombres premiers. Le nombre premier suivant 13 est 17." },
-        { q: "Complétez la suite : 10, 20, 18, 36, 34, ... ?", options: ["32", "68", "66", "70"], answer: 1, explanation: "La logique alterne entre une multiplication par 2, puis une soustraction de 2 (34 x 2 = 68)." },
-        { q: "Trouvez le nombre manquant : 4, 9, 14, 19, 24, ... ?", options: ["27", "28", "29", "30"], answer: 2, explanation: "On ajoute simplement 5 à chaque étape (24 + 5 = 29)." },
-        { q: "Complétez la suite : 80, 40, 20, 10, ... ?", options: ["0", "2.5", "5", "8"], answer: 2, explanation: "Chaque terme est divisé par 2 par rapport au précédent (10 / 2 = 5)." },
-        { q: "Quel nombre complète la série : 1, 2, 6, 24, 120, ... ?", options: ["240", "500", "600", "720"], answer: 3, explanation: "Il s'agit de multiplications successives par des entiers croissants : x2, x3, x4, x5, puis x6 (120 x 6 = 720)." },
-        { q: "Suite logique : 7, 9, 12, 16, 21, ... ?", options: ["25", "26", "27", "28"], answer: 2, explanation: "On ajoute des nombres croissants : +2, +3, +4, +5, et enfin +6 (21 + 6 = 27)." },
-        { q: "Complétez la suite : 3, 4, 6, 9, 13, 18, ... ?", options: ["22", "23", "24", "25"], answer: 2, explanation: "La différence entre les nombres augmente de 1 à chaque fois (+1, +2, +3, +4, +5, donc +6 à la fin : 18 + 6 = 24)." },
-        { q: "Trouvez le terme suivant : 100, 105, 95, 110, 90, ... ?", options: ["85", "100", "115", "120"], answer: 2, explanation: "La logique alterne : +5, puis -10, +15, -20. L'étape suivante est donc +25 (90 + 25 = 115)." },
-        { q: "Complétez la série : 0, 3, 8, 15, 24, ... ?", options: ["33", "34", "35", "36"], answer: 2, explanation: "Ce sont les carrés parfaits moins 1 : (1²-1), (2²-1), (3²-1), (4²-1), (5²-1). Le suivant est 6² - 1 = 35." },
-        { q: "Quelle est la suite logique de : 2, 6, 18, 54, ... ?", options: ["108", "150", "162", "216"], answer: 2, explanation: "Chaque terme est multiplié par 3 pour obtenir le suivant (54 x 3 = 162)." },
-        
-        // Mathématiques rapides et Proportionnalité
-        { q: "Si 4 ampoules consomment au total 400W en 1 heure, combien consommeront 2 ampoules identiques en 3 heures ?", options: ["200W", "300W", "400W", "600W"], answer: 3, explanation: "Une ampoule consomme 100W par heure. 2 ampoules consomment 200W par heure, donc en 3 heures : 200 x 3 = 600W." },
-        { q: "Une équipe de 4 ouvriers tire 200m de câble en 4 heures. Combien de mètres tireront 2 ouvriers en 8 heures ?", options: ["100m", "150m", "200m", "400m"], answer: 2, explanation: "Le nombre d'ouvriers est divisé par 2, mais le temps disponible double. La production globale reste donc inchangée : 200m." },
-        { q: "Une batterie de 12V est branchée sur une résistance de 4 Ohms. Quelle est l'intensité du courant électrique (U = R x I) ?", options: ["3A", "8A", "16A", "48A"], answer: 0, explanation: "Selon la loi d'Ohm, I = U / R. Donc 12V / 4 Ohms = 3 Ampères." },
-        { q: "Un panneau solaire produit 250W par heure d'ensoleillement. S'il y a 6 heures de bon soleil par jour, combien produit-il en 4 jours ?", options: ["1000W", "1500W", "4000W", "6000W"], answer: 3, explanation: "Production journalière = 250 x 6 = 1500W. Sur 4 jours : 1500 x 4 = 6000W." },
-        { q: "Le prix d'un équipement augmente de 10% puis baisse de 10%. Par rapport au prix initial, le prix final a :", options: ["Augmenté de 1%", "Diminué de 1%", "Resté identique", "Diminué de 2%"], answer: 1, explanation: "Une hausse de 10% suivie d'une baisse de 10% revient à multiplier par 1.10 x 0.90 = 0.99, soit une baisse nette de 1%." },
-        { q: "Une cuve se remplit en 3 heures avec un débit de 20L/min. Combien de temps faut-il si le débit passe à 30L/min ?", options: ["1h30", "2h00", "4h30", "5h00"], answer: 1, explanation: "Le temps est inversement proportionnel au débit. Le volume total est de 3h x 20L = 60 unités. À 30L/min : 60 / 30 = 2 heures." },
-        { q: "Si un véhicule technique parcourt 15 km en 10 minutes, quelle est sa vitesse moyenne en km/h ?", options: ["60 km/h", "75 km/h", "90 km/h", "150 km/h"], answer: 2, explanation: "Il y a 6 fois 10 minutes dans une heure. La vitesse est de 15 km x 6 = 90 km/h." },
-        { q: "Un moteur électrique a un rendement de 80%. S'il absorbe 1000W d'énergie électrique, quelle puissance mécanique utile restitue-t-il ?", options: ["200W", "750W", "800W", "1200W"], answer: 2, explanation: "La puissance utile est égale à la puissance absorbée multipliée par le rendement : 1000W x 0.80 = 800W." },
-        { q: "Un atelier consomme 1500 kWh en Janvier. En Février, sa consommation baisse de 20%. Quelle est sa consommation en Février ?", options: ["1100 kWh", "1200 kWh", "1300 kWh", "1400 kWh"], answer: 1, explanation: "20% de 1500 vaut 300. La nouvelle consommation est de 1500 - 300 = 1200 kWh." },
-        { q: "Divisez 100 par 0,5 et ajoutez 10. Quel est le résultat final ?", options: ["60", "110", "210", "55"], answer: 2, explanation: "Diviser par 0,5 revient à multiplier par 2. (100 / 0,5) = 200. Puis 200 + 10 = 210." },
+        // GRAMMAIRE ET ORTHOGRAPHE
+        { q: "Complétez : 'Ils se sont ... les mains avant l'intervention.'", options: ["lavé", "lavés", "lavées", "laver"], answer: 0, explanation: "Avec un verbe pronominal, si le Complément d'Objet Direct (ici 'les mains') est placé APRÈS le verbe, le participe passé ne s'accorde pas." },
+        { q: "Choisissez la bonne orthographe : 'Je vous ... le rapport de maintenance en pièce jointe.'", options: ["envoi", "envoie", "envois", "envoy"], answer: 1, explanation: "Il s'agit du verbe 'envoyer' conjugué à la première personne du singulier au présent de l'indicatif : J'envoie. ('Un envoi' est le nom)." },
+        { q: "Complétez : 'C'est la machine dont je t'... parlé hier.'", options: ["ai", "est", "a", "es"], answer: 0, explanation: "C'est le verbe parler conjugué au passé composé avec l'auxiliaire avoir : J'ai parlé (à toi). D'où 'je t'ai parlé'." },
+        { q: "Trouvez la phrase correctement écrite :", options: ["Il a pallié à ce problème.", "Il a pallier ce problème.", "Il a pallié ce problème.", "Il as pallié ce problème."], answer: 2, explanation: "Le verbe 'pallier' est transitif direct. On ne dit jamais 'pallier à quelque chose', mais 'pallier quelque chose'." },
+        { q: "Complétez : 'Les directeurs se sont ... à la tête de l'entreprise.'", options: ["succédé", "succédés", "succédées", "succédée"], answer: 0, explanation: "Le verbe se succéder ne prend jamais de COD (on succède 'à' quelqu'un). Le participe passé est donc toujours invariable : succédé." },
+        { q: "Quel mot est mal orthographié ?", options: ["Hormis", "Parmi", "Malgré", "Parmis"], answer: 3, explanation: "Le mot 'Parmi' ne prend JAMAIS de 's' à la fin." },
+        { q: "Complétez : 'Ces câbles électriques sont ...'", options: ["bleu clair", "bleus clairs", "bleus clair", "bleu clairs"], answer: 0, explanation: "Les adjectifs de couleur composés (bleu clair, vert foncé) sont toujours invariables. Ils ne prennent ni 's' ni 'e'." },
+        { q: "Complétez : 'Je suis prêt ... commencer les travaux.'", options: ["a", "à", "as", "ah"], answer: 1, explanation: "Il s'agit de la préposition 'à'. On ne peut pas dire 'Je suis prêt avait commencer'." },
+        { q: "Complétez : '... efforts n'ont pas suffi pour rétablir le courant.'", options: ["Ces", "Ses", "C'est", "S'est"], answer: 1, explanation: "C'est un adjectif possessif (les efforts à lui). On écrit donc 'Ses'." },
+        { q: "Parmi ces phrases, laquelle contient un pléonasme (répétition inutile) à éviter dans un rapport ?", options: ["Il est descendu rapidement.", "Nous allons collaborer ensemble.", "Le câble est très long.", "Il a résumé brièvement."], answer: 1, explanation: "Collaborer signifie déjà 'travailler ensemble'. Dire 'collaborer ensemble' est donc une répétition inutile (pléonasme)." },
 
-        // Logique Mécanique et Physique de base
-        { q: "Une grue utilise un système à 4 brins de corde pour soulever une charge de 400 kg. Quel effort de traction théorique subit chaque brin ?", options: ["100 kg", "200 kg", "400 kg", "800 kg"], answer: 0, explanation: "La charge est répartie équitablement sur les 4 brins de corde qui la soutiennent (400 / 4 = 100 kg par brin)." },
-        { q: "Si un fluide circule dans une canalisation qui se rétrécit brusquement, que fait sa vitesse ?", options: ["Elle diminue", "Elle augmente", "Elle s'arrête", "Elle reste stable"], answer: 1, explanation: "En vertu de la conservation du débit, pour que le même volume passe dans un espace plus petit, le fluide doit accélérer (effet Venturi)." },
-        { q: "Dans un circuit électrique en parallèle composé d'une lampe saine et d'une lampe grillée, que se passe-t-il si on met sous tension ?", options: ["Aucune ne s'allume", "Les deux s'allument", "La lampe saine s'allume", "Le circuit disjoncte immédiatement"], answer: 2, explanation: "Dans un montage en parallèle, les branches sont indépendantes. La panne d'une lampe n'interrompt pas le courant dans l'autre." },
-        { q: "On connecte deux batteries identiques de 12V en série. Quelle tension totale obtient-on ?", options: ["6V", "12V", "24V", "0V"], answer: 2, explanation: "En série, les tensions des sources d'énergie s'additionnent directement (12V + 12V = 24V)." },
-        { q: "On associe deux batteries de 12V et de capacité 100Ah chacune en parallèle. Qu'obtient-on ?", options: ["12V et 100Ah", "24V et 100Ah", "12V et 200Ah", "24V et 200Ah"], answer: 2, explanation: "En parallèle, la tension reste identique (12V), mais les capacités (Ah) s'additionnent pour offrir plus d'autonomie (200Ah)." },
-        { q: "Dans une transmission par chaîne (comme un vélo), si le pignon avant tourne dans le sens horaire, dans quel sens tourne le pignon arrière ?", options: ["Sens horaire", "Sens anti-horaire", "Il reste fixe", "Mouvement alternatif"], answer: 0, explanation: "Contrairement à des engrenages en contact direct, la chaîne transmet le mouvement sans en inverser le sens. Le pignon arrière tourne aussi dans le sens horaire." },
-        { q: "Si on augmente de manière significative la section (l'épaisseur) d'un conducteur en cuivre, sa résistance électrique :", options: ["Augmente", "Diminue", "Reste inchangée", "Devient infinie"], answer: 1, explanation: "Plus le câble est épais, plus le passage des électrons est facilité. La résistance électrique diminue." },
-        { q: "Quel dispositif est spécifiquement conçu pour protéger les personnes contre les courants de fuite à la terre ?", options: ["Le fusible", "Le disjoncteur divisionnaire", "Le disjoncteur différentiel", "Le parafoudre"], answer: 2, explanation: "Le disjoncteur différentiel détecte la différence de courant entre la phase et le préposé retour (neutre), protégeant l'homme des fuites de terre." },
-        { q: "Deux forces égales de 10 N s'exercent sur un point fixe dans des directions exactement opposées. Quelle est la force résultante ?", options: ["0 N", "10 N", "20 N", "-10 N"], answer: 0, explanation: "Les deux forces s'annulent mutuellement car elles ont la même intensité mais des sens contraires." },
-        { q: "Pourquoi le courant électrique longue distance est-il transporté sous Très Haute Tension (THT) par les lignes de la SNEL ?", options: ["Pour aller plus vite", "Pour limiter l'échauffement et les pertes par effet Joule", "Parce que c'est moins dangereux", "Pour augmenter la fréquence"], answer: 1, explanation: "Élever la tension permet de réduire l'intensité du courant pour une même puissance transmise, ce qui diminue grandement les pertes par effet Joule ($P = R \times I^2$)." },
+        // CONJUGAISON
+        { q: "Complétez : 'Si l'alarme avait sonné, nous ne ... pas entrés.'", options: ["serions", "serons", "sommes", "étions"], answer: 0, explanation: "C'est une condition dans le passé (Si + Plus-que-parfait). La proposition principale se conjugue donc au conditionnel passé (serions)." },
+        { q: "Complétez : 'Il est essentiel que vous ... les consignes de sécurité.'", options: ["suivez", "suiviez", "suivrez", "suivrons"], answer: 1, explanation: "L'expression 'Il est essentiel que' exige l'emploi du subjonctif présent : 'que vous suiviez'." },
+        { q: "Conjuguez le verbe : 'Je résous, tu résous, il ...'", options: ["résou", "résous", "résoud", "résout"], answer: 3, explanation: "Le verbe résoudre au présent de l'indicatif fait : Je résous, tu résous, il résout (avec un 't' à la fin)." },
+        { q: "Complétez : 'Dès qu'il ... terminé l'inspection, il partira.'", options: ["aura", "a", "aurait", "avait"], answer: 0, explanation: "L'action 'terminer' est future, mais elle doit se passer avant 'il partira'. On utilise donc le futur antérieur : 'aura terminé'." },
+        { q: "Complétez : 'Pendant que je ... le réseau, une panne est survenue.'", options: ["configure", "configurait", "configurais", "configurerai"], answer: 2, explanation: "L'action est continue dans le passé. Il faut utiliser l'imparfait à la 1ère personne du singulier (Je configurais)." },
+        { q: "Complétez : 'Veuillez ... l'expression de mes salutations distinguées.'", options: ["agréez", "agréer", "agréé", "agréée"], answer: 1, explanation: "Après un verbe conjugué (Veuillez), le verbe suivant se met à l'infinitif (agréer)." },
+        { q: "Conjugaison : 'Les pièces que nous avons ... étaient défectueuses.'", options: ["commandé", "commandés", "commandées", "commander"], answer: 2, explanation: "Le COD 'que' (qui remplace 'les pièces', féminin pluriel) est placé avant le verbe. Le participe passé s'accorde donc : commandées." },
+        { q: "Complétez : 'Nous ... souvent nos outils dans cet atelier.'", options: ["laissions", "laisserons", "laissons", "laissont"], answer: 0, explanation: "Le mot 'souvent' dans un récit au passé appelle l'imparfait, indiquant une habitude : nous laissions." },
+        { q: "Complétez : 'Bien qu'il ... qualifié, il n'a pas été retenu.'", options: ["est", "soit", "serait", "était"], answer: 1, explanation: "La locution conjonctive 'Bien que' exige toujours le mode subjonctif : 'Bien qu'il soit'." },
+        { q: "Complétez : 'Ils ... le matériel hier matin.'", options: ["ont reçu", "ont reçus", "on reçu", "ont reçues"], answer: 0, explanation: "Avec l'auxiliaire avoir, s'il n'y a pas de COD avant, le participe passé reste invariable : 'ont reçu'." },
 
-        // Analogies et Logique Verbale
-        { q: "Fusible est à Protection ce que Interrupteur est à :", options: ["Mesure", "Commande", "Production", "Isolant"], answer: 1, explanation: "Le rôle principal du fusible est la protection ; le rôle principal de l'interrupteur est la commande du circuit." },
-        { q: "Alternateur est à Électricité ce que Pompe est à :", options: ["Chaleur", "Fluide", "Lumière", "Vitesse"], answer: 1, explanation: "L'alternateur crée un flux d'électricité ; la pompe crée un flux ou mouvement de fluide." },
-        { q: "Trouvez l'intrus parmi les termes suivants :", options: ["Disjoncteur", "Fusible", "Tournevis", "Relais thermique"], answer: 2, explanation: "Le disjoncteur, le fusible et le relais thermique sont des organes de protection électrique. Le tournevis est un outil à main." },
-        { q: "Watt est à Puissance ce que Joule est à :", options: ["Tension", "Intensité", "Énergie", "Résistance"], answer: 2, explanation: "Le Watt est l'unité de mesure de la puissance électrique, tandis que le Joule mesure l'énergie." },
-        { q: "Multimètre est à Mesure ce que Fer à souder est à :", options: ["Coupure", "Assemblage", "Nettoyage", "Isolation"], answer: 1, explanation: "On utilise le multimètre pour effectuer une mesure, et le fer à souder pour réaliser un assemblage de composants." },
-        { q: "Isolant est à Plastique ce que Conducteur est à :", options: ["Verre", "Bois", "Aluminium", "Céramique"], answer: 2, explanation: "Le plastique est une matière isolante type ; l'aluminium est un excellent métal conducteur." },
-        { q: "Trouvez l'intrus parmi ces machines électriques :", options: ["Transformateur", "Moteur asynchrone", "Alternateur", "Génératrice CC"], answer: 0, explanation: "Le transformateur est un appareil électrique statique (sans pièce en mouvement), tandis que les trois autres sont des machines tournantes." },
-        { q: "Générateur est à Source ce que Récepteur est à :", options: ["Conducteur", "Interrupteur", "Charge", "Tension"], answer: 2, explanation: "Le générateur fournit l'énergie (la source), et le récepteur consomme cette énergie (la charge)." },
-        { q: "Court-circuit est à Danger ce que Surcharge est à :", options: ["Échauffement", "Sécurité", "Économie", "Rupture"], answer: 0, explanation: "Un court-circuit provoque un danger immédiat, tandis qu'une surcharge prolongée provoque un échauffement anormal des câbles." },
-        { q: "Gradateur est à Luminosité ce que Vanne est à :", options: ["Pression", "Débit", "Température", "Viscosité"], answer: 1, explanation: "Le gradateur module l'intensité lumineuse d'une pièce ; la vanne module le débit d'un liquide dans un tube." },
+        // VOCABULAIRE ET COMPRÉHENSION VERBALE
+        { q: "Quel est le synonyme de 'Obsolète' ?", options: ["Moderne", "Dépassé", "Efficace", "Neuf"], answer: 1, explanation: "Quelque chose d'obsolète est périmé, qui n'est plus en usage, donc dépassé." },
+        { q: "Quel est l'antonyme (le contraire) de 'Éphémère' ?", options: ["Durable", "Court", "Rapide", "Volatile"], answer: 0, explanation: "Éphémère signifie qui dure très peu de temps. Son contraire est donc durable." },
+        { q: "Que signifie le verbe 'Ajourner' une réunion ?", options: ["L'annuler définitivement", "La reporter à plus tard", "La valider", "La commencer immédiatement"], answer: 1, explanation: "Ajourner signifie remettre à un autre jour, reporter." },
+        { q: "On dit d'une personne qu'elle est 'Éloquente' lorsqu'elle :", options: ["Est très timide", "Écoute attentivement", "Parle avec facilité et persuasion", "Travaille avec ses mains"], answer: 2, explanation: "L'éloquence est l'art de bien parler, de s'exprimer avec aisance pour convaincre." },
+        { q: "Complétez l'analogie : 'Le doigt est à la main ce que la page est ...'", options: ["Au livre", "Au stylo", "Au mot", "À la lecture"], answer: 0, explanation: "Un doigt est une partie d'une main, tout comme une page est une partie d'un livre (relation contenant/contenu)." },
+        { q: "Trouvez l'intrus parmi ces termes d'attitude professionnelle :", options: ["Minutie", "Rigueur", "Négligence", "Précision"], answer: 2, explanation: "Minutie, rigueur et précision sont des qualités professionnelles. La négligence est un défaut (manque de soin)." },
+        { q: "Que signifie le verbe 'Altérer' ?", options: ["Améliorer", "Modifier en mal, dégrader", "Changer de place", "Nettoyer"], answer: 1, explanation: "Altérer signifie causer un dommage, changer en mal (ex: L'humidité a altéré le circuit)." },
+        { q: "Quel est le synonyme de 'Exhaustif' ?", options: ["Fatigant", "Incomplet", "Rapide", "Complet, qui traite un sujet à fond"], answer: 3, explanation: "Un rapport exhaustif est un rapport qui couvre l'intégralité d'un sujet sans rien omettre." },
+        { q: "Complétez l'analogie : 'Électricité est à Câble ce que Eau est à ...'", options: ["Rivière", "Pompe", "Tuyau", "Vanne"], answer: 2, explanation: "Le câble est le conduit qui transporte l'électricité, tout comme le tuyau est le conduit qui transporte l'eau." },
+        { q: "Que signifie 'Intrinsèque' ?", options: ["Qui vient de l'extérieur", "Qui est inhérent, propre à la chose elle-même", "Qui est temporaire", "Qui n'a pas de valeur"], answer: 1, explanation: "Une qualité intrinsèque est une qualité qui appartient en propre à un objet ou à une personne, indépendamment des éléments extérieurs." },
 
-        // Raisonnement Déductif et Logique Générale
-        { q: "Trois lignes A, B et C alimentent un poste. Si A est coupée, B saute. Si B saute, C reste alimentée. Si B a sauté, que peut-on affirmer ?", options: ["A est coupée", "C est hors tension", "C est toujours alimentée", "On ne peut rien conclure"], answer: 2, explanation: "L'énoncé stipule clairement que si B saute, C reste alimentée. Donc C fonctionne toujours." },
-        { q: "Si tous les disjoncteurs défectueux doivent être remplacés, et que le disjoncteur n°4 n'a pas été remplacé, alors :", options: ["Le disjoncteur n°4 est en panne", "Le disjoncteur n°4 fonctionne correctement", "Le technicien a oublié le n°4", "Il faut couper le courant"], answer: 1, explanation: "Puisque seuls les appareils défectueux doivent impérativement être changés, le fait qu'il n'ait pas été remplacé prouve qu'il n'est pas défectueux." },
-        { q: "Un câble industriel contient 4 paires de fils. Combien de conducteurs individuels ce câble possède-t-il ?", options: ["4", "6", "8", "12"], answer: 2, explanation: "Une paire contient 2 fils individuels. 4 paires x 2 = 8 fils conducteurs au total." },
-        { q: "Si l'affirmation 'Le voyant rouge est allumé' implique 'La ligne est sous tension'. Si la ligne n'est pas sous tension, alors :", options: ["Le voyant rouge est allumé", "Le voyant rouge est éteint", "Le voyant est vert", "Le disjoncteur a brûlé"], answer: 1, explanation: "Par contraposition logique : si l'allumage du voyant garantit la tension, l'absence de tension garantit que le voyant ne peut pas être allumé." },
-        { q: "Dans une armoire, le relais A est placé à gauche du relais B. Le relais C est placé à gauche du relais A. Quel composant est le plus à droite ?", options: ["Le relais A", "Le relais B", "Le relais C", "Impossible à dire"], answer: 1, explanation: "En suivant le positionnement de gauche à droite, l'ordre est : C, puis A, puis B. Le composant le plus à droite est donc B." },
-        { q: "Un agent possède 3 clés différentes pour 3 armoires réseau. Combien d'essais maximum doit-il faire pour attribuer à coup sûr chaque clé ?", options: ["3 essais", "4 essais", "6 essais", "9 essais"], answer: 0, explanation: "Pour la clé 1, max 2 tests ratés (le 3e est d'office le bon sans test). Il reste 2 armoires pour la clé 2 : max 1 test. La clé 3 va sur la dernière armoire restante. Au total : 2 + 1 + 0 = 3 essais." },
-        { q: "Si aucun matériau conducteur n'est parfait à température ambiante, et que le cuivre est un conducteur, alors :", options: ["Le cuivre est parfait", "Le cuivre n'est pas un conducteur parfait", "Le cuivre est un isolant", "Tous les matériaux sont imparfaits"], answer: 1, explanation: "Puisqu'aucun conducteur n'est parfait à cette température, le cuivre ne fait pas exception à la règle." },
-        { q: "Une ligne de distribution compte 5 pylônes alignés. La distance entre deux pylônes consécutifs est de 50 mètres. Quelle est la distance entre le premier et le dernier pylône ?", options: ["150 mètres", "200 mètres", "250 mètres", "300 mètres"], answer: 1, explanation: "Pour 5 pylônes, il y a exactement 4 intervalles de séparation. 4 intervalles x 50 mètres = 200 mètres." },
-        { q: "Quatre techniciens font une ronde. Jean passe avant Marc. Yves passe après Paul. Paul passe avant Jean. Qui effectue la ronde en premier ?", options: ["Jean", "Marc", "Yves", "Paul"], answer: 3, explanation: "L'ordre partiel établi montre que Paul passe avant Jean, et Jean avant Marc (Paul -> Jean -> Marc). De plus, Yves passe après Paul. Paul débute donc la marche." },
-        { q: "Le totalisateur d'un compteur indique 09998 kWh. Si l'installation consomme encore 5 kWh de plus, quel sera le nouvel affichage à 5 chiffres ?", options: ["09993", "10003", "10000", "10005"], answer: 1, explanation: "On réalise une addition classique : 09998 + 5 = 10003 kWh." }
+        // LOGIQUE ET RAISONNEMENT
+        { q: "Trouvez la lettre qui complète la suite : A, C, E, G, ... ?", options: ["H", "I", "J", "K"], answer: 1, explanation: "On saute une lettre à chaque fois dans l'alphabet. Après G, on saute H, et on arrive à I." },
+        { q: "Si tous les ingénieurs sont précis, et que Marc est précis, alors :", options: ["Marc est ingénieur", "Marc n'est pas ingénieur", "On ne peut pas conclure que Marc est ingénieur", "Tous les gens précis sont ingénieurs"], answer: 2, explanation: "C'est un piège de syllogisme. Tous les ingénieurs sont précis, mais l'inverse n'est pas vrai. Marc peut être un comptable précis. On ne peut donc rien conclure sur sa profession." },
+        { q: "Dans une boîte aveugle, il y a 5 gants noirs et 5 gants blancs. Combien faut-il en tirer au minimum pour être certain d'avoir une paire de la même couleur ?", options: ["2", "3", "5", "6"], answer: 1, explanation: "Si vous tirez 2 gants, vous pouvez avoir 1 noir et 1 blanc. Le 3ème gant tiré sera forcément soit noir, soit blanc, et formera donc une paire avec l'un des deux premiers." },
+        { q: "Quel jour étions-nous hier si demain est Lundi ?", options: ["Vendredi", "Samedi", "Dimanche", "Mardi"], answer: 1, explanation: "Si demain est Lundi, alors aujourd'hui nous sommes Dimanche. Donc hier, nous étions Samedi." },
+        { q: "Complétez la suite : 1, 3, 6, 10, 15, ... ?", options: ["18", "20", "21", "25"], answer: 2, explanation: "L'écart entre les nombres augmente de 1 à chaque étape (+2, +3, +4, +5). Le prochain écart est +6 (15 + 6 = 21)." },
+        { q: "Si 3 machines fabriquent 3 pièces en 3 minutes, combien de temps faut-il à 100 machines pour fabriquer 100 pièces ?", options: ["3 minutes", "10 minutes", "33 minutes", "100 minutes"], answer: 0, explanation: "Une seule machine fabrique une pièce en 3 minutes. Donc si 100 machines fonctionnent en même temps, elles produiront 100 pièces dans ces mêmes 3 minutes." },
+        { q: "Trouvez la lettre manquante : Z, X, V, T, ... ?", options: ["S", "R", "Q", "P"], answer: 1, explanation: "Il s'agit de l'alphabet à l'envers, en sautant une lettre à chaque fois (Z -> Y -> X -> W -> V...). Avant T, on saute S et on arrive à R." },
+        { q: "Luc est plus âgé que Paul. Paul est plus jeune que Marc. Qui est le plus âgé ?", options: ["Luc", "Paul", "Marc", "Impossible à déterminer"], answer: 3, explanation: "On sait que Luc et Marc sont tous les deux plus âgés que Paul, mais aucune information ne permet de comparer l'âge de Luc et de Marc entre eux." },
+        { q: "Un nénuphar double de taille chaque jour. Il lui faut 20 jours pour couvrir totalement un étang. En combien de jours couvrira-t-il la moitié de l'étang ?", options: ["10 jours", "15 jours", "19 jours", "On ne sait pas"], answer: 2, explanation: "S'il double chaque jour, il occupait la moitié de l'étang juste le jour avant de le remplir totalement. Donc au 19ème jour." },
+        { q: "Le mot 'PULSE' est l'anagramme (les mêmes lettres dans le désordre) de :", options: ["PLUIE", "LOUPE", "PEULS", "SOUPE"], answer: 2, explanation: "P-E-U-L-S contient exactement les mêmes lettres que P-U-L-S-E." },
+
+        // MATHÉMATIQUES ET CALCUL MENTAL
+        { q: "Combien font 25% de 200 ?", options: ["25", "50", "75", "100"], answer: 1, explanation: "25% équivaut à diviser par 4. Donc 200 / 4 = 50." },
+        { q: "Calculez : 1/3 + 1/6", options: ["2/9", "1/2", "2/6", "3/6"], answer: 1, explanation: "Il faut mettre au même dénominateur (6). 1/3 devient 2/6. L'addition donne 2/6 + 1/6 = 3/6. En simplifiant par 3, on obtient 1/2." },
+        { q: "Le prix d'un outil passe de 50$ à 40$. Quel est le pourcentage de réduction ?", options: ["10%", "15%", "20%", "25%"], answer: 2, explanation: "La réduction est de 10$. La formule est (Réduction / Prix initial) x 100. Soit (10/50) x 100 = 20%." },
+        { q: "Quel est le résultat de : 8 + 8 / 2 ?", options: ["8", "12", "16", "24"], answer: 1, explanation: "Selon les règles de priorité mathématique, la division se fait avant l'addition. On fait donc d'abord 8/2 = 4. Puis 8 + 4 = 12." },
+        { q: "Quel est le périmètre d'un local technique rectangulaire mesurant 10m de long sur 5m de large ?", options: ["15m", "30m", "50m", "100m"], answer: 1, explanation: "Le périmètre est la somme de tous les côtés : (Longueur + Largeur) x 2. Soit (10 + 5) x 2 = 30m." },
+        { q: "Calculez : 0.1 x 0.1", options: ["0.1", "0.01", "1", "0.2"], answer: 1, explanation: "Multipliez 1 par 1 pour obtenir 1, puis comptez le nombre total de chiffres après la virgule (ici deux chiffres). Le résultat est donc 0.01." },
+        { q: "Un train part de Kinshasa à 14h15. Le trajet dure 2h50. À quelle heure arrivera-t-il ?", options: ["16h50", "17h05", "17h15", "16h05"], answer: 1, explanation: "14h15 + 2h = 16h15. Ensuite, on ajoute 50 minutes. 16h15 + 45 min = 17h00. Il reste 5 min, donc 17h05." },
+        { q: "Quel est le produit de 7 par 8 ?", options: ["15", "54", "56", "64"], answer: 2, explanation: "Le produit est le résultat d'une multiplication. 7 x 8 = 56." },
+        { q: "Que représentent les 3/4 de 60 ?", options: ["15", "30", "40", "45"], answer: 3, explanation: "Pour trouver un quart (1/4), on divise 60 par 4 = 15. Pour trois quarts, on multiplie par 3. 15 x 3 = 45." },
+        { q: "Si vous roulez à une vitesse constante de 120 km/h, quelle distance parcourez-vous en 15 minutes ?", options: ["15 km", "20 km", "30 km", "45 km"], answer: 2, explanation: "15 minutes représentent exactement 1/4 d'heure. Vous parcourez donc 1/4 de la distance horaire : 120 / 4 = 30 km." }
     ];
 
     let currentQuestionIndex = 0;
@@ -413,15 +413,15 @@
 
         let feedback = "";
         if (percentage >= 80) {
-            feedback = "Excellent ! Votre esprit logique est affûté au maximum. Vous maîtrisez parfaitement ces notions.";
+            feedback = "Excellent score ! Votre communication écrite est irréprochable et votre logique est très bien affûtée.";
             scoreCircle.style.borderColor = "var(--correct-color)";
             scoreCircle.style.color = "var(--correct-color)";
         } else if (percentage >= 50) {
-            feedback = "Bon résultat. La plupart des pièges techniques sont évités, continuez ainsi pour gagner en automatisme.";
+            feedback = "Bon résultat. Soyez attentif aux pièges d'accords et aux priorités mathématiques pour viser le haut du classement.";
             scoreCircle.style.borderColor = "#ffc107";
             scoreCircle.style.color = "#ffc107";
         } else {
-            feedback = "Des lacunes subsistent. Relisez bien les explications pour mémoriser les principes physiques et les astuces numériques.";
+            feedback = "Il y a des révisions à faire en français. La maîtrise de la langue est très valorisée lors de ces épreuves. Prenez le temps de relire les règles !";
             scoreCircle.style.borderColor = "var(--wrong-color)";
             scoreCircle.style.color = "var(--wrong-color)";
         }

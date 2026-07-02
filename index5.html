@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Test - Électricien & Distribution Réseau (Niveau 4)</title>
+    <title>Simulateur SNEL & Kadea - Français, Logique & Maths (Niveau 5)</title>
     <style>
         :root {
-            --primary-color: #e65c00; /* Orange technique / énergie */
-            --bg-color: #f4f7f6;
-            --text-color: #333;
+            --primary-color: #4b0082; /* Indigo - Concentration */
+            --bg-color: #f4f3f8;
+            --text-color: #2c2c2c;
             --card-bg: #ffffff;
-            --hover-color: #ffe8d6;
+            --hover-color: #e8e0f0;
             --correct-color: #28a745;
             --wrong-color: #dc3545;
-            --info-bg: #fff3cd;
-            --info-text: #856404;
-            --info-border: #ffeeba;
+            --info-bg: #e3f2fd;
+            --info-text: #0d47a1;
+            --info-border: #90caf9;
         }
 
         body {
@@ -32,8 +32,8 @@
 
         .container {
             background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(75, 0, 130, 0.15);
             width: 100%;
             max-width: 850px;
             padding: 30px;
@@ -66,10 +66,11 @@
         }
 
         .question-text {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 20px;
             line-height: 1.5;
+            color: #1a1a1a;
         }
 
         .options-grid {
@@ -97,7 +98,7 @@
         }
 
         .option-btn.selected {
-            background-color: #ffe8d6;
+            background-color: #e8e0f0;
             border-color: var(--primary-color);
         }
 
@@ -119,7 +120,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-            border-left: 5px solid #ffc107;
+            border-left: 5px solid var(--info-border);
             font-weight: 500;
             line-height: 1.4;
             animation: fadeIn 0.3s ease-in-out;
@@ -134,18 +135,20 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 5px;
+            padding: 14px 25px;
+            font-size: 1.05rem;
+            border-radius: 8px;
             cursor: pointer;
             display: block;
             width: 100%;
             font-weight: bold;
             transition: background-color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn:hover:not(:disabled) {
-            background-color: #cc5200;
+            background-color: #320057;
         }
 
         .btn:disabled {
@@ -168,16 +171,17 @@
         }
 
         .score-circle {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             border: 10px solid var(--primary-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: bold;
             margin: 0 auto 20px auto;
+            color: var(--primary-color);
         }
 
         @media (min-width: 600px) {
@@ -191,11 +195,11 @@
 
 <div class="container">
     <div id="start-screen">
-        <h1 style="text-align: center; color: #e65c00;">Module 4 : Spécialisation Électrotechnique & Réseaux</h1>
-        <p>Ce simulateur est conçu spécifiquement pour tester vos connaissances pointues en <strong>électricité générale, appareillage, réseaux de distribution, sécurité (consignation) et dépannage</strong>.</p>
-        <p>Il contient <strong>50 questions techniques inédites</strong>, parfaitement calibrées pour les épreuves de sélection des techniciens et électriciens d'intervention.</p>
-        <p>Temps alloué : <strong>50 minutes</strong>. Lisez bien les schémas mentaux évoqués dans les questions !</p>
-        <button class="btn" onclick="startTest()">Démarrer l'évaluation technique</button>
+        <h1 style="text-align: center; color: var(--primary-color);">Module 5 : Maîtrise Avancée</h1>
+        <p>Ce test intensif de <strong>50 questions inédites</strong> évalue ta grammaire, ton vocabulaire professionnel, ta logique pure et ta rapidité de calcul mental.</p>
+        <p>Les recruteurs cherchent des techniciens capables de résoudre des problèmes rapidement tout en communiquant de manière irréprochable.</p>
+        <p>Temps alloué : <strong>50 minutes</strong>.</p>
+        <button class="btn" onclick="startTest()">Commencer l'entraînement</button>
     </div>
 
     <div id="quiz-screen" class="hidden">
@@ -217,75 +221,73 @@
     </div>
 
     <div id="result-screen" class="result-screen hidden">
-        <h2>Évaluation Technique Terminée</h2>
-        <p>Voici votre score pour cette épreuve de spécialité :</p>
+        <h2>Bilan du Test</h2>
+        <p>Voici ton score pour cette session avancée :</p>
         <div class="score-circle" id="final-score">0%</div>
         <p id="feedback-msg"></p>
-        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Relancer l'évaluation</button>
+        <button class="btn" onclick="location.reload()" style="margin-top: 20px;">Refaire ce test</button>
     </div>
 </div>
 
 <script>
     const questions = [
-        // THÉORIE ÉLECTRIQUE
-        { q: "Quelle est l'unité de mesure de la puissance apparente dans une installation électrique ?", options: ["Le Watt (W)", "Le Volt-Ampère (VA)", "Le Volt-Ampère Réactif (VAR)", "Le Joule (J)"], answer: 1, explanation: "La puissance apparente (S) se mesure en Volt-Ampère (VA). Le Watt mesure la puissance active (P), et le VAR la puissance réactive (Q)." },
-        { q: "Dans un système triphasé, comment calcule-t-on la puissance active totale (P) ?", options: ["P = U x I", "P = U x I x cos(φ)", "P = √3 x U x I x cos(φ)", "P = 3 x U x I"], answer: 2, explanation: "En triphasé, la formule de la puissance active est P = √3 x U x I x cos(φ), où U est la tension composée." },
-        { q: "Quel est le rôle principal d'une batterie de condensateurs dans un poste de transformation ?", options: ["Augmenter la tension", "Améliorer le facteur de puissance (relever le cos φ)", "Protéger contre la foudre", "Stocker de l'énergie de secours"], answer: 1, explanation: "Les condensateurs fournissent de l'énergie réactive pour compenser celle consommée par les moteurs et transformateurs, améliorant ainsi le facteur de puissance." },
-        { q: "Selon la loi d'Ohm, si la tension d'un circuit est de 220V et l'intensité de 10A, quelle est la résistance ?", options: ["22 Ohms", "2.2 Ohms", "2200 Ohms", "220 Ohms"], answer: 0, explanation: "Loi d'Ohm : U = R x I, donc R = U / I = 220 / 10 = 22 Ohms." },
-        { q: "Qu'appelle-t-on le 'déphasage' dans un circuit en courant alternatif ?", options: ["L'inversion de la phase et du neutre", "Le retard ou l'avance du courant par rapport à la tension", "La coupure d'une des trois phases", "La perte de fréquence"], answer: 1, explanation: "Le déphasage (angle phi) est le décalage temporel entre l'onde de courant et l'onde de tension, souvent causé par des récepteurs inductifs." },
-        { q: "Quel est le déphasage géométrique entre les trois phases d'un réseau triphasé équilibré ?", options: ["90°", "120°", "180°", "360°"], answer: 1, explanation: "Les trois tensions d'un réseau triphasé sont décalées de 120 degrés les unes par rapport aux autres." },
-        { q: "Si vous couplez un moteur triphasé en 'Étoile', la tension aux bornes d'un enroulement est :", options: ["Égale à la tension composée", "Divisée par √3 par rapport à la tension composée", "Multipliée par √3", "Nulle"], answer: 1, explanation: "En couplage étoile, chaque enroulement est soumis à la tension simple du réseau, soit la tension composée divisée par √3 (ex: 400V / √3 = 230V)." },
-        { q: "Quel composant électrique transforme l'énergie mécanique en énergie électrique ?", options: ["Le transformateur", "Le moteur", "L'alternateur (ou génératrice)", "L'onduleur"], answer: 2, explanation: "L'alternateur convertit l'énergie mécanique de rotation en énergie électrique (courant alternatif)." },
-        { q: "La fréquence standard du réseau de distribution électrique en RDC est de :", options: ["50 Hz", "60 Hz", "100 Hz", "400 Hz"], answer: 0, explanation: "Comme dans la majorité des pays d'Afrique et d'Europe, la fréquence du réseau est de 50 Hertz." },
-        { q: "Qu'est-ce que l'effet Joule ?", options: ["La création d'un champ magnétique par un courant", "Le dégagement de chaleur provoqué par le passage du courant dans un conducteur", "La production d'électricité par la chaleur", "L'arc électrique à l'ouverture d'un contact"], answer: 1, explanation: "L'effet Joule est la dissipation d'énergie sous forme de chaleur lorsque le courant traverse un matériau résistant." },
+        // GRAMMAIRE & ORTHOGRAPHE
+        { q: "Complétez : '... soient les pannes rencontrées, nous devons intervenir.'", options: ["Quelque", "Quelques", "Quelles que", "Quels que"], answer: 2, explanation: "Ici, on accorde avec 'les pannes' (féminin pluriel). La locution s'écrit en deux mots devant le verbe être : 'Quelles que'." },
+        { q: "Complétez : 'Les câbles que nous avons ... étaient sectionnés.'", options: ["remplacé", "remplacés", "remplacée", "remplacées"], answer: 1, explanation: "Le COD 'que' mis pour 'Les câbles' (masculin pluriel) est placé avant l'auxiliaire avoir. On accorde : remplacés." },
+        { q: "Quel est le pluriel correct de 'un court-circuit' ?", options: ["des court-circuit", "des courts-circuits", "des court-circuits", "des courts-circuit"], answer: 1, explanation: "C'est un mot composé d'un adjectif (court) et d'un nom (circuit). Les deux prennent la marque du pluriel : des courts-circuits." },
+        { q: "Trouvez la bonne orthographe : 'Nul n'est ... ignorer la procédure de sécurité.'", options: ["sensé", "sensée", "censé", "censée"], answer: 2, explanation: "'Censé' signifie 'supposé' (nul n'est supposé ignorer). 'Sensé' signifie 'qui a du bon sens'." },
+        { q: "Complétez : 'Il faut que l'équipe technique ... immédiatement.'", options: ["intervient", "interviendra", "intervienne", "interviendrais"], answer: 2, explanation: "La locution 'Il faut que' exige obligatoirement l'utilisation du subjonctif présent : qu'elle intervienne." },
+        { q: "Complétez : 'Je vous assure qu'elle était ... surprise par la coupure de courant.'", options: ["tout", "toute", "toutes", "touts"], answer: 1, explanation: "L'adverbe 'tout' s'accorde exceptionnellement lorsqu'il est placé devant un adjectif féminin commençant par une consonne (ici 'surprise'). On écrit donc 'toute'." },
+        { q: "Si la phrase est au Futur Simple, choisissez la bonne terminaison : 'Je ... l'installation demain.'", options: ["vérifiais", "vérifierait", "vérifierai", "vérifierais"], answer: 2, explanation: "Au futur simple, la première personne du singulier se termine par 'ai' (sans 's'). 'Je vérifierais' avec un 's' est du conditionnel présent." },
+        { q: "Choisissez la bonne forme : 'Il faut ... de rigueur sur ce chantier.'", options: ["d'avantage", "davantage", "d'avantages", "davantages"], answer: 1, explanation: "Ici, on parle de quantité (plus de rigueur), c'est donc l'adverbe invariable 'davantage' en un seul mot." },
+        { q: "Complétez : 'Le technicien a dit qu'il ... donnerait les consignes.'", options: ["leur", "leurs", "l'heure", "leurre"], answer: 0, explanation: "Placé devant un verbe, le pronom personnel 'leur' est toujours invariable. Il ne prend jamais de 's'." },
+        { q: "Trouvez l'intrus (le mot mal orthographié) :", options: ["Le langage", "Un acompte", "Le dévelopement", "Indépendant"], answer: 2, explanation: "Le mot s'écrit 'développement' avec deux 'p'." },
+        { q: "Quelle est la bonne conjugaison du verbe 'appeler' au présent ?", options: ["Nous appellons", "Nous appelons", "Nous appélons", "Nous appeulons"], answer: 1, explanation: "Le verbe appeler ne prend qu'un seul 'l' avec 'nous' et 'vous' (Nous appelons). Il en prend deux avec je, tu, il, ils (J'appelle)." },
+        { q: "Complétez : 'La ... principale d'un disjoncteur est de protéger le circuit.'", options: ["tache", "tâche", "täche", "tach"], answer: 1, explanation: "Une 'tâche' (avec accent circonflexe) est un travail à accomplir. Une 'tache' (sans accent) est une salissure." },
+        { q: "Complétez : 'L'intervention prendra deux, ... trois heures.'", options: ["voir", "voire", "voires", "vois"], answer: 1, explanation: "L'adverbe signifiant 'et même' s'écrit 'voire' (avec un 'e')." },
+        { q: "Complétez : 'Le transformateur est ... exploser.'", options: ["prêt à", "près de", "près à", "prêt de"], answer: 1, explanation: "'Près de' signifie 'sur le point de'. 'Prêt à' s'utilise pour une personne ou chose préparée à faire quelque chose." },
+        { q: "Choisissez la forme correcte : 'C'est un travail très ...'", options: ["fatigant", "fatiguant", "fatiguent", "fatigand"], answer: 0, explanation: "Ici, on cherche l'adjectif verbal, qui s'écrit sans 'u' : fatigant. Le participe présent (en fatiguant) garde le 'u'." },
 
-        // SÉCURITÉ ET HABILITATION
-        { q: "Quelle est la toute première étape réglementaire d'une procédure de consignation électrique ?", options: ["La condamnation", "La séparation (ou coupure)", "La VAT (Vérification d'Absence de Tension)", "La mise à la terre"], answer: 1, explanation: "La procédure de consignation commence toujours par la séparation de l'installation de ses sources d'énergie (coupure visible ou certaine)." },
-        { q: "À quoi sert exactement l'étape de 'Condamnation' lors d'une consignation ?", options: ["À vérifier que le courant est coupé", "À bloquer mécaniquement l'appareil de coupure (ex: cadenas) pour empêcher un réarmement accidentel", "À raccorder les câbles à la terre", "À signaler la zone avec des cônes"], answer: 1, explanation: "La condamnation immobilise l'organe de manœuvre avec un cadenas et une étiquette pour garantir qu'aucune autre personne ne remettra le courant." },
-        { q: "Quel est le but d'un Disjoncteur Différentiel ?", options: ["Protéger contre les courts-circuits", "Protéger contre les surintensités", "Protéger les personnes contre les contacts indirects et fuites à la terre", "Stabiliser la tension"], answer: 2, explanation: "Le différentiel compare le courant entrant et sortant. S'il y a une différence (fuite à la terre), il coupe le circuit pour protéger les personnes." },
-        { q: "À partir de quelle intensité un courant alternatif (50Hz) traversant le corps humain est-il généralement considéré comme très dangereux (risque de fibrillation) ?", options: ["1 mA", "10 mA", "30 mA", "500 mA"], answer: 2, explanation: "À partir de 30 mA, le courant peut provoquer une paralysie respiratoire ou une fibrillation ventriculaire. D'où le calibrage des disjoncteurs différentiels domestiques à 30mA." },
-        { q: "Que signifie le sigle VAT en sécurité électrique ?", options: ["Validation des Appareils Techniques", "Vérification d'Absence de Tension", "Valeur Alternative Totale", "Vérification des Ampérages Triphasés"], answer: 1, explanation: "La VAT est une étape cruciale réalisée avec un détecteur spécifique pour s'assurer qu'aucune tension ne subsiste avant de toucher les conducteurs." },
-        { q: "Quel Équipement de Protection Individuelle (EPI) est absoluement obligatoire pour manipuler des pièces nues sous tension en BT ?", options: ["Des lunettes de soleil", "Des gants isolants adaptés à la tension", "Un casque antibruit", "Des chaussures antistatiques"], answer: 1, explanation: "Les gants isolants (généralement surmontés de surgants en cuir pour la protection mécanique) sont le rempart principal contre l'électrisation directe." },
-        { q: "Quel type d'extincteur doit-on utiliser de préférence sur un feu d'origine électrique sous tension ?", options: ["Extincteur à Eau pulvérisée", "Extincteur à Mousse", "Extincteur à Dioxyde de Carbone (CO2)", "Un tuyau d'arrosage"], answer: 2, explanation: "Le CO2 est un gaz inerte et non conducteur. L'eau et la mousse sont conductrices et exposent l'utilisateur à un choc électrique mortel." },
-        { q: "Dans la norme standard (ex: CEI), quelle est la couleur conventionnelle obligatoire pour le conducteur de neutre ?", options: ["Rouge", "Vert/Jaune", "Bleu clair", "Noir"], answer: 2, explanation: "Le neutre doit toujours être de couleur bleu clair. Le vert/jaune est strictement réservé à la terre." },
-        { q: "Que protège le déclencheur 'Thermique' d'un disjoncteur magnéto-thermique ?", options: ["L'installation contre les courts-circuits", "L'installation contre les surcharges prolongées", "Les personnes contre l'électrocution", "Les appareils contre la foudre"], answer: 1, explanation: "La partie thermique réagit à l'échauffement causé par une surintensité légère mais durable (surcharge). La partie magnétique réagit instantanément aux courts-circuits." },
-        { q: "La mise à la terre d'une carcasse métallique d'un appareil sert à :", options: ["Faire fonctionner l'appareil", "Améliorer la conductivité", "Évacuer un courant de défaut vers la terre pour éviter l'électrocution au toucher", "Réduire la facture d'électricité"], answer: 2, explanation: "En cas de défaut d'isolement (le fil de phase touche la carcasse), le courant s'écoule par la terre, déclenchant ainsi le disjoncteur différentiel." },
+        // VOCABULAIRE & LOGIQUE VERBALE
+        { q: "Quel est le synonyme de l'adjectif 'Pérenne' ?", options: ["Éphémère", "Durable", "Fragile", "Complexe"], answer: 1, explanation: "Une chose pérenne est une chose qui dure longtemps, qui est durable (ex: une solution pérenne)." },
+        { q: "Quel est l'antonyme (le contraire) de 'Laxiste' ?", options: ["Tolérant", "Paresseux", "Rigoureux", "Patient"], answer: 2, explanation: "Le laxisme est une tolérance excessive, un manque de fermeté. Le contraire est donc d'être rigoureux ou strict." },
+        { q: "Que signifie 'Inhérent' ?", options: ["Qui est extérieur au sujet", "Qui est lié de manière inséparable", "Qui arrive par accident", "Qui est illégal"], answer: 1, explanation: "Le risque inhérent à un métier est un risque qui y est lié par nature, qu'on ne peut pas séparer du métier lui-même." },
+        { q: "Complétez l'analogie : 'Livre est à Chapitre ce que Bâtiment est à...'", options: ["Fondation", "Architecte", "Étage", "Brique"], answer: 2, explanation: "Le chapitre est une grande division fonctionnelle du livre. L'étage est une grande division fonctionnelle d'un bâtiment." },
+        { q: "Complétez l'analogie : 'Thermomètre est à Température ce que Baromètre est à...'", options: ["Humidité", "Vent", "Pression atmosphérique", "Pluie"], answer: 2, explanation: "L'instrument de mesure appelé baromètre sert à mesurer la pression atmosphérique." },
+        { q: "Trouvez l'intrus parmi ces mots :", options: ["Hésitation", "Incertitude", "Doute", "Conviction"], answer: 3, explanation: "Les trois premiers mots expriment un manque de certitude. La conviction exprime au contraire une certitude absolue." },
+        { q: "Que signifie le verbe 'Corroborer' ?", options: ["Détruire", "Confirmer, appuyer une thèse", "Mentir", "Saboter"], answer: 1, explanation: "Corroborer une information, c'est apporter des preuves qui la confirment ou la renforcent." },
+        { q: "Quel est le synonyme de 'Proactif' ?", options: ["Réactif", "Lent", "Anticipatif", "Passif"], answer: 2, explanation: "Être proactif, c'est prendre les devants, anticiper les problèmes avant qu'ils ne surviennent." },
+        { q: "Dans un cadre professionnel, être 'le garant' de la sécurité signifie :", options: ["Être celui qui l'ignore", "Être celui qui en répond, qui en assure le respect", "Être la victime", "Être le concepteur exclusif"], answer: 1, explanation: "Le garant est la personne responsable de faire respecter et d'assurer une chose (ici, la sécurité)." },
+        { q: "Trouvez l'intrus parmi ces termes de maintenance industrielle :", options: ["Maintenance Préventive", "Maintenance Curative", "Maintenance Corrective", "Maintenance Définitive"], answer: 3, explanation: "Les termes préventive, curative et corrective sont des standards de l'industrie. La 'maintenance définitive' n'existe pas." },
 
-        // DISTRIBUTION RÉSEAU (SNEL / HAUTE TENSION)
-        { q: "Pour transporter l'électricité sur de très longues distances (ex: Barrage Inga vers Kinshasa), on utilise :", options: ["La Basse Tension (BT)", "La Moyenne Tension (MT)", "La Très Haute Tension (THT)", "Le Courant Continu Basse Tension"], answer: 2, explanation: "La THT (ex: 400 kV ou 500 kV) permet de réduire drastiquement l'intensité du courant, minimisant ainsi les pertes par effet Joule sur des centaines de kilomètres." },
-        { q: "Dans un transformateur de puissance d'un poste source, quel est le double rôle de l'huile diélectrique ?", options: ["Lubrifier et nettoyer", "Isoler électriquement et refroidir les enroulements", "Protéger de la rouille et allourdir le transfo", "Améliorer le passage du courant"], answer: 1, explanation: "L'huile spéciale plonge les bobines dans un milieu très isolant tout en circulant (souvent via des radiateurs) pour évacuer la chaleur dégagée par pertes fer et cuivre." },
-        { q: "Sur les lignes aériennes Haute Tension, quel est le rôle des chaînes d'isolateurs (souvent en verre ou en composite) ?", options: ["Décorer les pylônes", "Ralentir le courant", "Isoler électriquement les conducteurs sous tension de la structure métallique du pylône reliée à la terre", "Empêcher les oiseaux de se poser"], answer: 2, explanation: "Ils empêchent le courant de la ligne de s'écouler dans le pylône, ce qui créerait un court-circuit franc à la terre." },
-        { q: "Qu'est-ce qu'un 'câble de garde' sur une ligne THT ?", options: ["Un câble qui transporte les données internet", "Le câble supérieur relié à la terre protégeant la ligne contre la foudre", "Un câble de rechange", "Le câble qui transporte le neutre"], answer: 1, explanation: "Placé au sommet des pylônes et relié à la terre, le câble de garde attire les coups de foudre pour protéger les câbles conducteurs de phase situés en dessous." },
-        { q: "Un transformateur abaisseur de distribution MT/BT (Moyenne Tension vers Basse Tension) dans un quartier fournit généralement :", options: ["Du 10 kV", "Du 400 V entre phases et 230 V entre phase et neutre", "Du 12 V continu", "Du 1000 V"], answer: 1, explanation: "C'est la tension d'utilisation standard en distribution publique BT. (Anciennement 380V/220V)." },
-        { q: "Quel phénomène électrique provoque un grésillement sonore et une lueur violette autour des lignes THT par temps humide ?", options: ["L'effet Joule", "L'effet Corona (ou couronne)", "L'effet Hall", "Le court-circuit"], answer: 1, explanation: "L'effet Corona est l'ionisation de l'air environnant due au champ électrique très intense à la surface des conducteurs HT." },
-        { q: "Si la charge d'un réseau triphasé BT est fortement déséquilibrée (une phase consomme beaucoup plus que les autres), que se passe-t-il dans le câble de neutre ?", options: ["Le courant y est nul", "Le courant devient négatif", "Un courant de déséquilibre circule dans le neutre", "Le câble fond immédiatement"], answer: 2, explanation: "En système déséquilibré, la somme vectorielle des courants de phase n'est plus nulle. C'est ce résidu qui retourne par le neutre à la source." },
-        { q: "Sur un transformateur triphasé de distribution, quel couplage est généralement utilisé au secondaire pour permettre la distribution d'un neutre aux abonnés ?", options: ["Le couplage Triangle", "Le couplage Zigzag ou Étoile", "Le couplage Série", "Le couplage Parallèle"], answer: 1, explanation: "Le couplage étoile (ou zigzag) possède un point neutre commun qui peut être relié à la terre et distribué aux utilisateurs pour obtenir la tension simple (230V)." },
-        { q: "Qu'est-ce qu'un sectionneur dans un poste HT ?", options: ["Un appareil capable de couper un courant de court-circuit", "Un appareil assurant une coupure visible pour isoler une partie du circuit, toujours manipulé à vide (sans courant)", "Un transformateur de tension", "Un fusible géant"], answer: 1, explanation: "Le sectionneur n'a pas de pouvoir de coupure. Il sert à garantir visuellement l'isolement d'une zone. Il faut d'abord ouvrir le disjoncteur (qui coupe le courant) avant d'ouvrir le sectionneur." },
-        { q: "Pour les lignes aériennes de distribution publique, quel matériau conducteur est le plus souvent privilégié en raison de son faible poids par rapport au cuivre ?", options: ["L'or", "L'acier pur", "L'aluminium (ou alliage Almélec)", "Le laiton"], answer: 2, explanation: "L'aluminium est moins bon conducteur que le cuivre, mais il est beaucoup plus léger et moins cher, ce qui réduit considérablement le poids sur les pylônes et la tension mécanique." },
+        // LOGIQUE PURE & DÉDUCTION
+        { q: "Trouvez le nombre qui complète la suite : 2, 5, 10, 17, 26, ... ?", options: ["35", "36", "37", "39"], answer: 2, explanation: "L'écart entre chaque nombre est un nombre impair croissant : +3, +5, +7, +9. Le prochain écart est +11 (26 + 11 = 37)." },
+        { q: "Trouvez le nombre qui complète la suite : 100, 99, 96, 91, 84, ... ?", options: ["73", "75", "77", "80"], answer: 1, explanation: "On soustrait des nombres impairs croissants : -1, -3, -5, -7. La prochaine étape est -9 (84 - 9 = 75)." },
+        { q: "Quelle lettre complète logiquement la série : B, E, H, K, ... ?", options: ["M", "N", "O", "P"], answer: 1, explanation: "On avance de 3 lettres dans l'alphabet à chaque fois. K(11) + 3 = N(14)." },
+        { q: "Tous les techniciens ont des chaussures de sécurité. Quelques électriciens sont des techniciens. Donc :", options: ["Tous les électriciens ont des chaussures de sécurité", "Quelques électriciens ont des chaussures de sécurité", "Aucun électricien n'a de chaussures", "Les chaussures sont réservées aux techniciens"], answer: 1, explanation: "Puisque quelques électriciens font partie du groupe 'techniciens', et que TOUT ce groupe a des chaussures, on déduit logiquement que ces quelques électriciens en ont." },
+        { q: "L'âge d'Alain est le double de l'âge de Bernard. Dans 10 ans, Alain aura 30 ans. Quel est l'âge actuel de Bernard ?", options: ["5 ans", "10 ans", "15 ans", "20 ans"], answer: 1, explanation: "Si Alain aura 30 ans dans 10 ans, il a 20 ans aujourd'hui. Puisqu'il a le double de Bernard, Bernard a actuellement 10 ans." },
+        { q: "Si avant-hier était mercredi, quel jour sera le lendemain de demain ?", options: ["Samedi", "Dimanche", "Lundi", "Mardi"], answer: 1, explanation: "Si avant-hier = Mercredi, Aujourd'hui = Vendredi. Demain = Samedi. Le lendemain de demain = Dimanche." },
+        { q: "Quel est l'anagramme (les mêmes lettres dans le désordre) du mot 'ROUGE' ?", options: ["ORGUE", "ROUES", "GOURO", "OURSE"], answer: 0, explanation: "Le mot O-R-G-U-E contient exactement les mêmes cinq lettres que R-O-U-G-E." },
+        { q: "Alex est plus grand que Bob. Bob est plus grand que Carl. David est plus grand qu'Alex. Qui est le plus petit ?", options: ["Alex", "Bob", "Carl", "David"], answer: 2, explanation: "En ordonnant par taille : David > Alex > Bob > Carl. C'est donc Carl le plus petit." },
+        { q: "Complétez la suite : 1, 8, 27, 64, ... ?", options: ["100", "125", "144", "256"], answer: 1, explanation: "Il s'agit de la suite des cubes : 1³, 2³, 3³, 4³. Le prochain est 5³ (5x5x5) = 125." },
+        { q: "Dans une ferme, il y a des canards (2 pattes) et des lapins (4 pattes). On compte 10 têtes et 30 pattes au total. Combien y a-t-il de lapins ?", options: ["3", "4", "5", "6"], answer: 2, explanation: "S'il y a 5 lapins (20 pattes) et 5 canards (10 pattes), on a bien 10 têtes et 30 pattes au total." },
+        { q: "Un nénuphar double de taille chaque jour. Il lui faut 30 jours pour couvrir totalement la surface d'un lac. En combien de jours couvrira-t-il la MOITIÉ du lac ?", options: ["15 jours", "20 jours", "28 jours", "29 jours"], answer: 3, explanation: "Puisqu'il double de volume CHAQUE jour, il occupait exactement la moitié du lac la veille du jour où il l'a rempli totalement (le 29ème jour)." },
+        { q: "Vous marchez 3 km vers le Nord, puis 4 km vers l'Est. À quelle distance en ligne droite vous trouvez-vous de votre point de départ ?", options: ["5 km", "7 km", "12 km", "1 km"], answer: 0, explanation: "Cela forme un triangle rectangle (théorème de Pythagore). Racine carrée de (3² + 4²) = Racine de (9+16) = Racine de 25 = 5 km." },
 
-        // DÉPANNAGE ET MESURES (MULTIMÈTRE)
-        { q: "Comment branche-t-on un voltmètre pour mesurer la chute de tension aux bornes d'une charge ?", options: ["En série avec la charge", "En parallèle avec la charge", "Entre la phase et la terre obligatoirement", "En court-circuit"], answer: 1, explanation: "Le voltmètre mesure une différence de potentiel. Il doit toujours être branché en dérivation (parallèle) sur le composant à mesurer." },
-        { q: "Vous utilisez un ohmmètre pour tester un fusible extrait du circuit. L'appareil affiche 'OL' ou '∞'. Que concluez-vous ?", options: ["Le fusible est en bon état", "Le fusible est coupé (fondu)", "Le fusible est en court-circuit", "La batterie du testeur est vide"], answer: 1, explanation: "Un affichage de surcharge (Over Limit) ou d'infini signifie que la résistance est infinie. Le courant ne passe plus : le fusible est mort." },
-        { q: "Comment mesure-t-on facilement l'intensité du courant consommé par un moteur triphasé en marche, sans débrancher les câbles ?", options: ["Avec un mégohmmètre", "Avec un voltmètre en série", "Avec une pince ampèremétrique placée autour de chaque câble de phase individuellement", "Avec une pince ampèremétrique placée autour des 3 phases ensemble"], answer: 2, explanation: "La pince ampèremétrique mesure le champ magnétique induit par le courant. Il faut enserrer un seul fil de phase à la fois, sinon la somme des courants s'annule." },
-        { q: "Sur un circuit sous tension, un interrupteur fermé contrôle une lampe allumée. Si vous placez les pointes de touche de votre voltmètre sur les deux bornes de l'interrupteur, vous lirez environ :", options: ["230 V", "0 V", "400 V", "12 V"], answer: 1, explanation: "Un interrupteur fermé agit comme un fil continu. La différence de potentiel entre ses bornes est donc quasi nulle (0V). Toute la tension est aux bornes de la lampe." },
-        { q: "Sur le même circuit, si la lampe est éteinte car l'interrupteur est ouvert, quelle tension lirez-vous aux bornes de l'interrupteur ?", options: ["0 V", "La tension totale du réseau (ex: 230 V)", "La moitié de la tension", "Une tension négative"], answer: 1, explanation: "Circuit ouvert : le potentiel de la phase arrive sur une borne, et le retour par la lampe (qui ne chute aucune tension puisqu'il n'y a pas de courant) amène le neutre sur l'autre borne. Vous lisez 230V." },
-        { q: "Un moteur électrique disjoncte instantanément dès sa mise sous tension (déclenchement magnétique). Quelle est la cause la plus probable ?", options: ["Une légère surcharge mécanique", "Un échauffement progressif", "Un court-circuit franc dans les bobinages ou la boîte à bornes", "Une baisse de tension du réseau"], answer: 2, explanation: "Un déclenchement immédiat (magnétique) est la signature d'une surintensité massive, caractéristique d'un court-circuit entre phases ou phase/masse." },
-        { q: "Quel appareil utilise-t-on spécifiquement pour vérifier l'isolement d'un câble enterré avant sa mise en service (pour s'assurer que la gaine n'est pas blessée) ?", options: ["Un voltmètre", "Un luxmètre", "Un mégohmmètre (testeur d'isolement)", "Un tachymètre"], answer: 2, explanation: "Le mégohmmètre injecte une haute tension continue (ex: 500V ou 1000V) pour vérifier que la résistance entre l'âme du câble et la terre est de plusieurs Mégohms." },
-        { q: "Un contacteur industriel claque fortement et à répétition ('mitraillage') lorsqu'on appuie sur le bouton marche. Quelle en est souvent la cause ?", options: ["Le moteur est trop puissant", "La tension de la bobine de commande est trop faible ou chute à l'appel", "Un fusible principal est coupé", "Le relais thermique a déclenché"], answer: 1, explanation: "Si la tension de commande est insuffisante, la bobine n'a pas assez de force magnétique pour vaincre complètement le ressort de rappel, provoquant des rebonds continus." },
-        { q: "Lors d'un dépannage sur un tableau électrique, vous remplacez un fusible fondu de 10A par un nouveau de 10A, qui fond immédiatement à la mise sous tension. Que devez-vous faire ?", options: ["Mettre un fusible de 20A pour que ça tienne", "Mettre un fil de cuivre à la place", "Chercher et réparer le court-circuit en aval avant de remettre un fusible", "Augmenter la tension"], answer: 2, explanation: "Le fusible fond pour protéger le circuit d'un défaut persistant. Sur-calibrer un fusible annule la protection et provoquera un incendie. Il faut d'abord trouver le défaut." },
-        { q: "Sur un réseau de distribution public en BT, si un abonné se plaint d'avoir des variations de tension (lumières qui vacillent) lorsqu'il allume un gros appareil, il s'agit d'un problème de :", options: ["Chute de tension due à une ligne trop longue ou sous-dimensionnée", "Surfréquence du réseau", "Mise à la terre trop forte", "Rupture de phase chez le voisin"], answer: 0, explanation: "Au démarrage d'une forte charge, l'intensité appelée provoque une chute de tension dans les câbles d'alimentation si ceux-ci ont une résistance de ligne importante (trop fins ou trop longs)." },
-
-        // MATHÉMATIQUES APPLIQUÉES ET CALCULS ÉLECTRIQUES
-        { q: "Un appareil de chauffage électrique de 4400 W est alimenté en monophasé 220 V. Quelle est l'intensité du courant consommé ?", options: ["10 A", "15 A", "20 A", "25 A"], answer: 2, explanation: "En courant alternatif résistif pur, P = U x I. Donc I = P / U = 4400 / 220 = 20 Ampères." },
-        { q: "Pour l'appareil précédent (20A en régime continu), quel calibre minimal de disjoncteur divisionnaire devez-vous choisir pour protéger son circuit dédié ?", options: ["10 A", "16 A", "20 A ou 25 A", "2 A"], answer: 2, explanation: "Le disjoncteur doit être supérieur ou égal au courant nominal, mais protéger la section du fil (généralement 2.5 mm² pour 20A, donc un disjoncteur 20A est parfaitement adapté)." },
-        { q: "La résistance électrique d'un conducteur cylindrique est donnée par R = ρ x (L / S). Si la longueur (L) du câble est doublée, que devient sa résistance ?", options: ["Elle est divisée par 2", "Elle reste la même", "Elle double", "Elle quadruple"], answer: 2, explanation: "La résistance est directement proportionnelle à la longueur. Plus le câble est long, plus la résistance au passage des électrons est grande." },
-        { q: "Un moteur électrique absorbe une puissance électrique de 10 kW. Son rendement (η) est de 0,9. Quelle est la puissance mécanique utile fournie sur son axe ?", options: ["11 kW", "10 kW", "9 kW", "1 kW"], answer: 2, explanation: "Puissance Utile = Puissance Absorbée x Rendement. 10 kW x 0,9 = 9 kW utiles (1 kW est perdu en chaleur et frottements)." },
-        { q: "Si la section (S) d'un câble d'alimentation est trop petite pour le courant qui le traverse, la conséquence physique immédiate est :", options: ["Une augmentation de la tension aux bornes du récepteur", "Un échauffement excessif du câble par effet Joule", "Une accélération du courant", "Une baisse de la facture d'électricité"], answer: 1, explanation: "Une section trop faible entraîne une forte résistance. Avec un fort courant, P = R x I², ce qui génère une grande quantité de chaleur pouvant fondre l'isolant." },
-        { q: "Trois résistances chauffantes de 60 Ohms chacune sont couplées en parallèle. Quelle est la résistance équivalente totale ?", options: ["180 Ohms", "60 Ohms", "20 Ohms", "10 Ohms"], answer: 2, explanation: "Pour N résistances identiques en parallèle, R_eq = R / N. Donc 60 / 3 = 20 Ohms. Le courant passe plus facilement." },
-        { q: "Une ligne BT présente une résistance totale de ligne de 0,5 Ohm. Un courant de 20A y circule. Quelle est la chute de tension (ΔU) dans cette ligne ?", options: ["5 V", "10 V", "20 V", "40 V"], answer: 1, explanation: "Loi d'Ohm pour la ligne : ΔU = R_ligne x I = 0,5 x 20 = 10 Volts perdus en ligne." },
-        { q: "Une installation consomme 3000 W pendant 4 heures. Quelle est l'énergie consommée (celle que facturera la SNEL) ?", options: ["12000 J", "12 kWh", "3000 W/h", "750 kWh"], answer: 1, explanation: "Énergie (E) = Puissance (P) x Temps (t). 3 kW x 4 h = 12 kWh." },
-        { q: "Un transformateur parfait abaisse le 10 000 V en 400 V. Si le courant secondaire (côté 400V) est de 100 A, quel est le courant primaire (côté 10 000V) ?", options: ["4 A", "25 A", "400 A", "10 000 A"], answer: 0, explanation: "La puissance est conservée : U1 x I1 = U2 x I2. 10000 x I1 = 400 x 100. Donc 10000 x I1 = 40000, ce qui donne I1 = 4 Ampères." },
-        { q: "Si l'on branche en série deux batteries de 12V / 50 Ah, on obtient à la sortie :", options: ["12V / 100 Ah", "24V / 50 Ah", "24V / 100 Ah", "12V / 50 Ah"], answer: 1, explanation: "En série, les tensions s'additionnent (12+12=24V), mais la capacité d'Ah (l'autonomie) reste celle de la boucle unique (50Ah). Pour doubler les Ah, il faut les brancher en parallèle." }
+        // MATHÉMATIQUES & CALCUL MENTAL
+        { q: "Combien font 15% de 60 ?", options: ["6", "9", "12", "15"], answer: 1, explanation: "10% de 60 font 6. 5% de 60 font 3 (la moitié). Donc 6 + 3 = 9." },
+        { q: "Calculez l'addition de fractions : 3/5 + 1/2", options: ["4/7", "8/10", "11/10", "1.5"], answer: 2, explanation: "Mise au dénominateur commun (10) : (6/10) + (5/10) = 11/10." },
+        { q: "Le prix d'un équipement baisse de 20%, puis augmente de 20% le mois suivant. Par rapport au prix initial, le nouveau prix a :", options: ["Retrouvé son prix initial", "Baissé de 4%", "Augmenté de 4%", "Baissé de 20%"], answer: 1, explanation: "Exemple sur 100$ : -20% = 80$. Puis +20% sur les 80$ (soit +16$) = 96$. Le prix a donc baissé de 4%." },
+        { q: "Si 5 machines fabriquent 5 pièces en 5 minutes, combien de temps faut-il à 100 machines pour fabriquer 100 pièces ?", options: ["5 minutes", "20 minutes", "100 minutes", "500 minutes"], answer: 0, explanation: "Chaque machine est indépendante. Une machine seule fabrique 1 pièce en 5 minutes. Donc 100 machines travaillant ensemble fabriqueront 100 pièces en 5 minutes." },
+        { q: "Quel est le résultat de : 0,2 x 0,4 ?", options: ["0.8", "0.08", "8", "0.008"], answer: 1, explanation: "2 x 4 = 8. Il y a un chiffre après la virgule dans chaque opérande (donc 2 au total). Le résultat est 0,08." },
+        { q: "Un véhicule roule à 90 km/h. Quelle est sa vitesse en mètres par seconde (m/s) ?", options: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], answer: 2, explanation: "Pour convertir des km/h en m/s, on divise par 3,6. (90 / 3,6 = 25)." },
+        { q: "Quelle est l'aire d'un triangle dont la base mesure 10 cm et la hauteur 8 cm ?", options: ["40 cm²", "80 cm²", "18 cm²", "36 cm²"], answer: 0, explanation: "La formule de l'aire d'un triangle est : (Base x Hauteur) / 2. Soit (10 x 8) / 2 = 80 / 2 = 40." },
+        { q: "Deux techniciens se partagent une prime de 50$ selon un ratio de 2:3. Combien reçoit celui qui a la plus petite part ?", options: ["10$", "20$", "25$", "30$"], answer: 1, explanation: "Le ratio total est de 2+3 = 5 parts. Chaque part vaut 50/5 = 10$. La petite part (2) vaut 2x10 = 20$." },
+        { q: "Quelle est la moyenne des nombres suivants : 12, 15, 18, 23 ?", options: ["16", "17", "18", "19"], answer: 1, explanation: "La somme est de 12+15+18+23 = 68. On divise par le nombre d'éléments (4) : 68 / 4 = 17." },
+        { q: "Résolvez l'équation : 3x - 7 = 14", options: ["x = 4", "x = 5", "x = 6", "x = 7"], answer: 3, explanation: "On isole x : 3x = 14 + 7 -> 3x = 21 -> x = 21/3 -> x = 7." },
+        { q: "Quel est approximativement le périmètre d'un cercle de rayon 10 cm (en prenant Pi ≈ 3.14) ?", options: ["31.4 cm", "62.8 cm", "314 cm", "100 cm"], answer: 1, explanation: "La formule du périmètre est : 2 x Pi x Rayon. Soit 2 x 3.14 x 10 = 62.8 cm." },
+        { q: "Un outil coûte 120$. Il bénéficie d'une remise de 25%. Quel est son nouveau prix ?", options: ["30$", "80$", "90$", "95$"], answer: 2, explanation: "25% correspond à un quart (1/4). 120 / 4 = 30$. Le nouveau prix est donc 120 - 30 = 90$." },
+        { q: "Un agent travaille de 08h45 à 16h15 avec 1 heure de pause. Quel est son temps de travail effectif ?", options: ["6h30", "7h30", "8h30", "7h00"], answer: 0, explanation: "De 08h45 à 16h15, il y a 7h30 de temps de présence (De 08h45 à 15h45 = 7h, plus 30 min = 7h30). Moins 1h de pause = 6h30." }
     ];
 
     let currentQuestionIndex = 0;
@@ -332,11 +334,11 @@
         selectedOptionIndex = null;
         isValidated = false;
         document.getElementById('action-btn').disabled = true;
-        document.getElementById('action-btn').innerText = "Valider la réponse technique";
+        document.getElementById('action-btn').innerText = "Valider la réponse";
         document.getElementById('explanation-box').classList.add('hidden'); 
         
         const q = questions[currentQuestionIndex];
-        document.getElementById('question-counter').innerText = `Question Technique ${currentQuestionIndex + 1} / ${questions.length}`;
+        document.getElementById('question-counter').innerText = `Question ${currentQuestionIndex + 1} / ${questions.length}`;
         document.getElementById('question-text').innerText = q.q;
         
         const progress = ((currentQuestionIndex) / questions.length) * 100;
@@ -386,10 +388,10 @@
             }
 
             const explanationBox = document.getElementById('explanation-box');
-            explanationBox.innerText = `Analyse Technique : ${q.explanation}`;
+            explanationBox.innerText = `Règle / Astuce : ${q.explanation}`;
             explanationBox.classList.remove('hidden');
 
-            document.getElementById('action-btn').innerText = "Schéma suivant";
+            document.getElementById('action-btn').innerText = "Question suivante";
             isValidated = true;
             
         } else {
@@ -413,20 +415,20 @@
 
         let feedback = "";
         if (percentage >= 80) {
-            feedback = "Performance exceptionnelle ! Tes bases en électrotechnique, sécurité et distribution réseau sont extrêmement solides. Tu es définitivement prêt pour le terrain.";
+            feedback = "Niveau Expert atteint ! Ton français est professionnel et ta logique mathématique est imparable. Continue avec cette confiance pour dimanche !";
             scoreCircle.style.borderColor = "var(--correct-color)";
             scoreCircle.style.color = "var(--correct-color)";
         } else if (percentage >= 50) {
-            feedback = "Bon niveau technique. Revois bien les procédures de consignation et les formules sur les systèmes triphasés pour être incontestable lors de l'examen.";
-            scoreCircle.style.borderColor = "#ffc107";
-            scoreCircle.style.color = "#ffc107";
+            feedback = "Très bon niveau global. Prends le temps d'analyser tes erreurs dans les règles d'accords pour faire un sans-faute sur le terrain.";
+            scoreCircle.style.borderColor = "#ff9800";
+            scoreCircle.style.color = "#ff9800";
         } else {
-            feedback = "Attention, l'électricité industrielle ne pardonne pas ! Il faut revoir les bases de la loi d'Ohm, la sécurité des personnes et le comportement des récepteurs avant le grand jour.";
+            feedback = "Il y a quelques pièges classiques de grammaire et de calcul où tu es tombé. Relis bien les astuces fournies dans les corrections !";
             scoreCircle.style.borderColor = "var(--wrong-color)";
             scoreCircle.style.color = "var(--wrong-color)";
         }
 
-        document.getElementById('feedback-msg').innerText = `Résultat de l'expertise : ${score} bonnes réponses sur ${questions.length}. ${feedback}`;
+        document.getElementById('feedback-msg').innerText = `Tu as obtenu ${score} bonnes réponses sur ${questions.length}. ${feedback}`;
     }
 </script>
 
